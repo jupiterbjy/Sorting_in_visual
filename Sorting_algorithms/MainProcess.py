@@ -1,17 +1,52 @@
-import threading as th
+from multiprocessing import Process, Lock
+from time import sleep
 
-import Bubble
-import visualizing as vl
-import Source_array as sa
-import Sorting_loader
+import Source_array
+import Sorting_algorithms as Algorithms
 
 
 # Don't put () on target, or it will return result of that function!
-# TODO: decide whether to pass copy of class instance via copy module
 
-t = sa.Source(30)
-
-th1 = td.Thread(target = Sorting_loader, args = (t))
-th_visual = td.Thread(target = vl.Main, args = ())
+# Having headache searching how to run thread, darn.
 
 
+def Visualizing(source, lock, sort_proc):
+    
+    while sort_proc.is_alive():
+        lock.aquire()
+
+        # Vertical for now
+        
+        for i in source.array:
+            print("#" * i, sep='', end='\n')
+
+        sleep(source.delay)
+        lock.release()
+        
+
+# Will load up entire list of sorts and run one by one, far way to go.     
+class Loader():
+    def __init__(self, al_list):
+        pass
+        # do something
+        
+    def __exit__(self):
+        pass
+        # kill process or reset 'source' instance, idk
+        
+    
+if __name__ == "__main__":
+    # running as main
+    
+    lock = Lock()
+    test_case = Source_array.Source(30)
+    
+    sorter = Process(target = Algorithms.Bubble, args = (test_case.array, lock))
+    visual = Process(target = Visualizing, args = (test_case, lock, sorter))
+    
+    sorter.start()
+    visual.start()
+    
+else:
+    # imported 
+    pass

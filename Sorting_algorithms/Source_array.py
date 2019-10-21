@@ -21,6 +21,5 @@ def shuffle(array, length = -1):
 class Source():
     def __init__(self, length = -1, delay = 50):
         self.length = length
-        self.array = shuffle([i for i in range(length)], length)
-        self.signal = False
-        self.sorted = False
+        self.array = shuffle([i+1 for i in range(length)], length)
+        self.delay = delay
