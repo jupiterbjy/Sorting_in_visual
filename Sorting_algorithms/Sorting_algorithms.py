@@ -1,35 +1,61 @@
 import time
+import g_var
+import threading as th
 
 # Created by looking at pseudo code in en wiki
-
 #__all__ = []
 
-def swap(a, b, c):
-    a[b], a[c] = a[c], a[b]
-
+class sort():
+    def __init__(self, Class):
+        self.array = Class.array
+        self.length = len(Class.array)
+        self.event = g_var.ev
+        self.swapped = True
     
-def Bubble(array, lock):
+    def swap(a, b, c):
+        a[b], a[c] = a[c], a[b]
+    
+    
+class Bubble(sort):
+    
+    while sort.swapped:
+        sort.swapped = False
+        
+        for idx in range(length-1):
+            event.wait()
+            
+            if array[idx] > array[idx+1]:
+                sort.swapped = True
+                swap(array, idx, idx+1)
+            
+            event.clear()
+    end()
+    
+'''
+def Bubble(cl):
+    array = cl.array
     swaped = True
     n = len(array)
     
     while swaped:
         swaped = False
         
-        for idx in range(n):
-            
-            lock.aquire()
+        for idx in range(n-1):
+            g_var.ev.wait()
             
             if array[idx] > array[idx+1]:
                 swaped = True
                 swap(array, idx, idx+1)
-                
-            lock.release()
+            
+            g_var.ev.clear()
+    end()
     return array
-
+'''
 
 # Todo - impliment lock and complete code below:
 
-def Bubble_opt1(array, lock):
+def Bubble_opt1(cl):
+    array = cl.array
     swaped = True
     n = len(array)
     idx = 0
@@ -88,3 +114,7 @@ def cocktail(array, end):
 
 def Selection():
     pass
+
+def end():
+    g_var.s_alive = False
+    
