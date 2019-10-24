@@ -13,7 +13,8 @@
     
     
 > Check out this on codes
-
-    meh!
+    < update for current Pi auto ip mailer >
     
+    https://unix.stackexchange.com/questions/22615/how-can-i-get-my-external-ip-address-in-a-shell-script
     
+    https://www.cyberciti.biz/faq/ubuntu-dig-command-not-found-install-digonubuntu/

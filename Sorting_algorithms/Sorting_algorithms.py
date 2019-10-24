@@ -1,35 +1,54 @@
 import time
 import g_var
-import threading as th
 
 # Created by looking at pseudo code in en wiki
 #__all__ = []
 
-class sort():
+# marks end of class
+def end():
+    g_var.s_alive = False
+    
+
+# Not sure if this was good idea
+    
+class Sort():
     def __init__(self, Class):
         self.array = Class.array
         self.length = len(Class.array)
         self.event = g_var.ev
         self.swapped = True
     
-    def swap(a, b, c):
+    # Don't forget to put 'self' on all function in class!
+    
+    def swap(self, a, b, c):
         a[b], a[c] = a[c], a[b]
     
     
-class Bubble(sort):
-    
-    while sort.swapped:
-        sort.swapped = False
+# Is it better to set self.swapped to some label rather than just spamming .self?
+
+class Bubble(Sort):
+    def __init__(self, Class):
+        super().__init__(Class)
         
-        for idx in range(length-1):
-            event.wait()
-            
-            if array[idx] > array[idx+1]:
-                sort.swapped = True
-                swap(array, idx, idx+1)
-            
-            event.clear()
-    end()
+        while self.swapped:
+            self.swapped = False
+
+            for idx in range(self.length-1):
+                self.event.wait()
+
+                if self.array[idx] > self.array[idx+1]:
+
+                    self.swapped = True
+                    self.swap(self.array, idx, (idx+1))
+
+                self.event.clear()
+        
+        return None
+
+    def __exit__(self):
+        end()
+        print('Sorted')
+    
     
 '''
 def Bubble(cl):
@@ -51,8 +70,6 @@ def Bubble(cl):
     end()
     return array
 '''
-
-# Todo - impliment lock and complete code below:
 
 def Bubble_opt1(cl):
     array = cl.array
@@ -115,6 +132,5 @@ def cocktail(array, end):
 def Selection():
     pass
 
-def end():
-    g_var.s_alive = False
+
     

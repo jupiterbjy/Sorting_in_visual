@@ -41,7 +41,7 @@ class Loader():
     
 if __name__ == "__main__":
     # running as main
-    test_case = Source_array.Source(10)
+    test_case = Source_array.Source(10, 0.3)
     
     changed = th.Event()
     
