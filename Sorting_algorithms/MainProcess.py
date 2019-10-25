@@ -69,7 +69,7 @@ if __name__ == '__main__':
     
     changed = th.Event()
     
-    sorter = th.Thread(target = Algorithms.Bubble, args = (test_case,))
+    sorter = th.Thread(target = Algorithms.Bubble_opt1, args = (test_case,))
     visual = th.Thread(target = Visualizing, args = (test_case,))
     
     '''
