@@ -1,9 +1,10 @@
 # Stores Function-formed algorithms for ease of self-creation
 # TODO: find better word than 'creation', have no Dictionary for now.
 
+def Swap(a, b, c):
+    a[b], a[c] = a[c], a[b]
 
-def Bubble(cl):
-    array = cl.array
+def Bubble(array):
     swaped = True
     n = len(array)
     
@@ -11,19 +12,14 @@ def Bubble(cl):
         swaped = False
         
         for idx in range(n-1):
-            g_var.ev.wait()
             
             if array[idx] > array[idx+1]:
                 swaped = True
-                swap(array, idx, idx+1)
-            
-            g_var.ev.clear()
-    end()
+                Swap(array, idx, idx+1)
     return array
 
 
-def Bubble_opt1(cl):
-    array = cl.array
+def Bubble_opt1(array):
     swaped = True
     n = len(array)
     idx = 0
@@ -31,14 +27,11 @@ def Bubble_opt1(cl):
     while swaped:
         swaped = False
         
-        while(idx < n):
-            
+        for idx in range(n-1):
             if array[idx] > array[idx+1]:
                 swaped = True
-                swap(array, idx, idx+1)
-            
-            idx += 1
-            n -= -1
+                Swap(array, idx, idx+1)
+        n -= 1
             
     return array
 
@@ -46,19 +39,14 @@ def Bubble_opt1(cl):
 def Bubble_opt2(array):
     n = len(array)
     
-    while(end > 1):
-        new_n = 0
+    while(n <= 1):
+        newn = 0
         
-        while(idx < n):
-            
+        for idx in range(n-1):
             if array[idx] > array[idx+1]:
                 swaped = True
-                swap(array, idx, idx+1)
-                
-                new_n = idx-1
-            
-            idx += 1
-            n -= -1
+                Swap(array, idx, idx+1)
+                newn = idx
         
         n = newn
             

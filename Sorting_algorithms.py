@@ -25,32 +25,51 @@ class Sort():
         #self.access = 0
         #self.swap = 0
     
+    
     def lo_list(self, index):
         self.event.wait()
+        self.event.clear()
+        g_var.Color_reset()
         
         g_var.selected = index
-        g_var.swap_target = -1
         g_var.access += 1
         #self.access += 1
         
-        self.event.clear()
         return self.array[index]
-        
-    def lo_swap(self, index1, index2):
+    
+    
+    def lo_compare(self, idx1, idx2):
         self.event.wait()
+        self.event.clear()
+        g_var.Color_reset()
+        
+        # TODO: add mode trigger to enable compare colouring or not
+        # will need event.wait() here then.
+        
+        # return 1 if self.lo_list(self, idx1) > self.lo_list(self, idx2) else 0
+        g_var.access += 2
+        #g_var.selected = idx1
+        g_var.comp_target = [idx1, idx2]
+        
+        return 1 if self.array[idx1] > self.array[idx2] else 0
+
+    
+    def lo_swap(self, idx1, idx2):
+        self.event.wait()
+        self.event.clear()
+        g_var.Color_reset()
+        
         g_var.access += 2
         g_var.swap += 1
         #self.access += 2
         #self.swap += 1
         
-        g_var.selected = index2
-        g_var.swap_target = index1
+        #g_var.selected = [idx1, idx2]
+        g_var.swap_target = [idx1, idx2]
         
-        Swap(self.array, index1, index2)
+        Swap(self.array, idx1, idx2)
         
-        self.event.clear()
         
-    
 # Is it better to set self.swapped to some label rather than just spamming .self?
 
 class Bubble(Sort):
@@ -61,7 +80,7 @@ class Bubble(Sort):
             self.swapped = False
 
             for idx in range(self.length-1):
-                if self.lo_list(idx) > self.lo_list(idx+1):
+                if self.lo_compare(idx, idx+1):
 
                     self.swapped = True
                     self.lo_swap(idx, idx+1)
@@ -70,6 +89,7 @@ class Bubble(Sort):
         return None
     
     # this don't do anything unless used like 'with bubble as bla bla'
+    # Will leave this until I eventually use __exit__ method in this project, as a reminder.
     def __exit__(self):
         end()
         print('Sorted')

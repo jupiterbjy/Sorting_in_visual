@@ -2,6 +2,8 @@ import random
 
 
 # Shuffling in Fisher-Yates way, with keyword arg.
+def Swap(a, b, c):
+    a[b], a[c] = a[c], a[b]
 
 def shuffle(array, length = -1):
     if length < 0:
@@ -9,8 +11,8 @@ def shuffle(array, length = -1):
     
     print(length)
     for i in range(length):
-        r = random.randint(0, length-i)
-        array[r], array[-1-i] = array[-1-i], array[r]
+        r = random.randint(0, length-i-1)
+        Swap(array, r, -1-i)
     
     return array
 
