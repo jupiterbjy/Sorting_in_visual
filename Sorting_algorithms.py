@@ -149,7 +149,7 @@ class Cocktail_shaker(Sort):
         swapped = True
         flip = False
         l = self.length
-        n = self.length-1
+        n = self.length
         n2 = self.length
         
         while swapped:
@@ -158,7 +158,7 @@ class Cocktail_shaker(Sort):
             if flip:
                 flip = False
 
-                for idx in range(n2-1, l-n-1, -1):
+                for idx in range(n2-1, l-n, -1):
 
                     if self.lo_compare(idx-1,idx):
                         swapped = True
@@ -168,7 +168,7 @@ class Cocktail_shaker(Sort):
             else:
                 flip = True
 
-                for idx in range(l-n-1, n2-1):
+                for idx in range(l-n, n2-1):
 
                     if self.lo_compare(idx,idx+1):
                         swapped = True
@@ -177,7 +177,6 @@ class Cocktail_shaker(Sort):
 
         end()
         return None
-    
+
 
     
-

@@ -98,7 +98,7 @@ class Loader():
     
 if __name__ == '__main__':
     # running as main
-    test_case = Source_array.Source(30, 0.07)
+    test_case = Source_array.Source(25, 0.03)
     
     '''
     lock = Lock()

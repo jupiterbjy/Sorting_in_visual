@@ -16,6 +16,8 @@
     < Apply this to win10 CMD >
         https://stackoverflow.com/questions/287871/how-to-print-colored-text-in-terminal-in-python
     
+    < Remember this for Pi Owncloud >
+    https://linuxhint.com/install_owncloud_raspberry_pi/
 
     < update for current Pi auto ip mailer >
         https://unix.stackexchange.com/questions/22615/how-can-i-get-my-external-ip-address-in-a-shell-script

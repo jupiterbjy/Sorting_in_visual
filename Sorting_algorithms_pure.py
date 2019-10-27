@@ -54,73 +54,82 @@ def Bubble_opt2(array):
 
 
 def Cocktail_shaker(array):
-    # improve this function, not gonna watch pseudo code yet
     swapped = True
     flip = False
-    l = len(array)
-    n = l-1
-    n2 = l
-    #TODO: debug why this keeps searching beyond where it needed to be
+    start = 0
+    end = len(array)-1
+    
     while swapped:
         swapped = False
         
         if flip:
             flip = False
-            print(array, "A", n2-1, l-n-1, -1)
-            for idx in range(n2-1, l-n-1, -1):
-                print(idx-1, idx)
+            for idx in range(end, start, -1):
                 if array[idx-1] > array[idx]:
                     swapped = True
                     Swap(array, idx-1, idx)
-            n -= 1
-            
+            start += 1
+        
         else:
             flip = True
-            print(array, "A", l-n-1, n2-1)
-            for idx in range(l-n-1, n2-1):
-                print(idx, idx+1)
+            for idx in range(start, end):
                 if array[idx] > array[idx+1]:
                     swapped = True
                     Swap(array, idx, idx+1)
-            n2 -= 1
+            end -= 1
             
     return array
     
     
 def Cocktail_shaker_opt1(array):
-    swapped = True
     flip = False
-    n = len(array)-1
-    n2 = len(array)
-    last_n = 0
-    last_n2 = 0
+    start = 0
+    end = len(array)-1
+    import time
     
-    while swapped:
-        swapped = False
+    while start < end:
+        
+        new_end = end
+        new_start = start
+        
+        time.sleep(1)
         
         if flip:
             flip = False
             
-            last_n = 0
-            
-            for idx in range(n-1, 0, -1):
-                if array[idx] > array[idx+1]:
-                    swapped = True
-                    Swap(array, idx, idx+1)
-                    last_n = idx
-            n -= 1
-            
-        else:   
+            for idx in range(end, start, -1):
+                if array[idx-1] > array[idx]:
+                    Swap(array, idx-1, idx)
+                    new_end = idx
+        
+        else:
             flip = True
                          
-            for idx in range(n2-1):
+            for idx in range(start, end):
                 if array[idx] > array[idx+1]:
-                    swapped = True
                     Swap(array, idx, idx+1)
-            n2 -= 1
+                    new_start = idx
+        
+        new_start -= 1
+        print(array, start, end)
             
     return array
 
+def Bubble_opt2(array):
+    n = len(array)
+    while True:
+        newn = 0
+        
+        for idx in range(n-1):
+            if array[idx] > array[idx+1]:
+                Swap(array, idx, idx+1)
+                newn = idx+1
+        
+        n = newn
+        
+        if n<=1:
+            break
+    return array
 
 def Selection():
     pass
