@@ -65,7 +65,8 @@ def Visualizing(Class):
                 color = ANSI_C.PUR
                 
             else:
-                color = ANSI_C.GRN if idx == g_var.selected else ANSI_C.END
+                color = ANSI_C.END
+                #color = ANSI_C.GRN if idx == g_var.index else ANSI_C.END
                 
             print(color + "#" * i + ANSI_C.END, sep='', end='\n')
         
@@ -97,7 +98,7 @@ class Loader():
     
 if __name__ == '__main__':
     # running as main
-    test_case = Source_array.Source(20, 0.1)
+    test_case = Source_array.Source(20, 0.07)
     
     '''
     lock = Lock()
@@ -106,7 +107,7 @@ if __name__ == '__main__':
     visual = Process(target = Visualizing, args = (test_case.array, test_case.delay))
     '''
     
-    sorter = th.Thread(target = Algorithms.Bubble, args = (test_case,))
+    sorter = th.Thread(target = Algorithms.Cocktail_shaker, args = (test_case,))
     visual = th.Thread(target = Visualizing, args = (test_case,))
     
     

@@ -1,72 +1,122 @@
 # Stores Function-formed algorithms for ease of self-creation
 # TODO: find better word than 'creation', have no Dictionary for now.
+# import Sorting_algorithms_pure as sa
 
 def Swap(a, b, c):
     a[b], a[c] = a[c], a[b]
 
 def Bubble(array):
-    swaped = True
+    swapped = True
     n = len(array)
     
-    while swaped:
-        swaped = False
+    while swapped:
+        swapped = False
         
         for idx in range(n-1):
             
             if array[idx] > array[idx+1]:
-                swaped = True
+                swapped = True
                 Swap(array, idx, idx+1)
     return array
 
 
 def Bubble_opt1(array):
-    swaped = True
+    swapped = True
     n = len(array)
-    idx = 0
     
-    while swaped:
-        swaped = False
+    while swapped:
+        swapped = False
         
         for idx in range(n-1):
             if array[idx] > array[idx+1]:
-                swaped = True
+                swapped = True
                 Swap(array, idx, idx+1)
         n -= 1
             
     return array
 
-
+# In case more than one element is in final position, this is faster.
 def Bubble_opt2(array):
     n = len(array)
-    
-    while(n <= 1):
+    while True:
         newn = 0
         
         for idx in range(n-1):
             if array[idx] > array[idx+1]:
-                swaped = True
                 Swap(array, idx, idx+1)
-                newn = idx
+                newn = idx+1
         
         n = newn
-            
-    return array
-
-
-def cocktail(array, end):
-    swaped = True
-    
-    while swaped:
-        swaped = False
         
-        for idx in range(end):
-            
-            if array[idx] > array[idx+1]:
-                swaped = True
-                swap(array, idx, idx+1)
-                
+        if n<=1:
+            break
     return array
 
+
+def Cocktail_shaker(array):
+    # improve this function, not gonna watch pseudo code yet
+    swapped = True
+    flip = False
+    n = len(array)-1
+    n2 = len(array)
+    
+    while swapped:
+        swapped = False
+        
+        if flip:
+            flip = False
+            
+            for idx in range(n-1, 0, -1):
+                if array[idx] > array[idx+1]:
+                    swapped = True
+                    Swap(array, idx, idx+1)
+            n -= 1
+            
+        else:   
+            flip = True
+                         
+            for idx in range(n2-1):
+                if array[idx] > array[idx+1]:
+                    swapped = True
+                    Swap(array, idx, idx+1)
+            n2 -= 1
+            
+    return array
+    
+    
+def Cocktail_shaker_opt1(array):
+    swapped = True
+    flip = False
+    n = len(array)-1
+    n2 = len(array)
+    last_n = 0
+    last_n2 = 0
+    
+    while swapped:
+        swapped = False
+        
+        if flip:
+            flip = False
+            
+            last_n = 0
+            
+            for idx in range(n-1, 0, -1):
+                if array[idx] > array[idx+1]:
+                    swapped = True
+                    Swap(array, idx, idx+1)
+                    last_n = idx
+            n -= 1
+            
+        else:   
+            flip = True
+                         
+            for idx in range(n2-1):
+                if array[idx] > array[idx+1]:
+                    swapped = True
+                    Swap(array, idx, idx+1)
+            n2 -= 1
+            
+    return array
 
 
 def Selection():

@@ -2,10 +2,14 @@ import time
 import g_var
 
 # Created by looking at pseudo code in en wiki
-#__all__ = []
 
+__all__ = ['Bubble', 'Bubble_opt1', 'Bubble_opt2', 'Selection']
+
+
+# Cleanup Color marks and let Visual thread end of thread.
 
 def end():
+    g_var.Color_reset()
     g_var.s_alive = False
     
 def Swap(a, b, c):
@@ -44,11 +48,10 @@ class Sort():
         g_var.Color_reset()
         
         # TODO: add mode trigger to enable compare colouring or not
-        # will need event.wait() here then.
-        
         # return 1 if self.lo_list(self, idx1) > self.lo_list(self, idx2) else 0
-        g_var.access += 2
+        
         #g_var.selected = idx1
+        g_var.access += 2
         g_var.comp_target = [idx1, idx2]
         
         return 1 if self.array[idx1] > self.array[idx2] else 0
@@ -89,30 +92,87 @@ class Bubble(Sort):
         return None
     
     # this don't do anything unless used like 'with bubble as bla bla'
-    # Will leave this until I eventually use __exit__ method in this project, as a reminder.
+    '''
     def __exit__(self):
         end()
         print('Sorted')
+    '''
 
         
 class Bubble_opt1(Sort):
     def __init__(self, Class):
         super().__init__(Class)
         
-        n = self.length - 1
-        idx = 0
+        n = self.length
+
+        while self.swapped:
+            self.swapped = False
+            
+            for idx in range(n-1):
+                if self.lo_compare(idx, idx+1):
+                    self.swapped = True
+                    self.lo_swap(idx, idx+1)
+            n -= 1
+        
+        end()
+        return None
+    
+    
+class Bubble_opt2(Sort):
+    def __init__(self, Class):
+        super().__init__(Class)
+        
+        n = self.length
+
+        while True:
+            newn = 0
+            
+            for idx in range(n-1):
+                if self.lo_compare(idx, idx+1):
+                    self.lo_swap(idx, idx+1)
+                    newn = idx+1
+                    
+            n = newn
+            
+            if n <= 1:
+                break
+        
+        end()
+        return None
+    
+    
+class Cocktail_shaker(Sort):
+    def __init__(self, Class):
+        super().__init__(Class)
+        
+        # improve this function, not gonna watch pseudo code yet
+        self.swapped = True
+        flip = False
+        n = self.length-1
+        n2 = self.length
 
         while self.swapped:
             self.swapped = False
 
-            while(idx < n):
-                if self.lo_list(idx) > self.lo_list(idx+1):
-                    self.swapped = True
-                    self.lo_swap(idx, idx+1)
+            if flip:
+                flip = False
 
-                idx += 1
-        n -= 1
+                for idx in range(n-1, 0, -1):
+                    if self.lo_compare(idx, idx+1):
+                        self.swapped = True
+                        self.lo_swap(idx, idx+1)
+                n -= 1
 
+            else:   
+                flip = True
+
+                for idx in range(n2-1):
+                    if self.lo_compare(idx, idx+1):
+                        self.swapped = True
+                        self.lo_swap(idx, idx+1)
+                n2 -= 1
+
+        end()
         return None
 
     
