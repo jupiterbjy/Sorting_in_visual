@@ -57,25 +57,28 @@ def Cocktail_shaker(array):
     # improve this function, not gonna watch pseudo code yet
     swapped = True
     flip = False
-    n = len(array)-1
-    n2 = len(array)
-    
+    l = len(array)
+    n = l-1
+    n2 = l
+    #TODO: debug why this keeps searching beyond where it needed to be
     while swapped:
         swapped = False
         
         if flip:
             flip = False
-            
-            for idx in range(n-1, 0, -1):
-                if array[idx] > array[idx+1]:
+            print(array, "A", n2-1, l-n-1, -1)
+            for idx in range(n2-1, l-n-1, -1):
+                print(idx-1, idx)
+                if array[idx-1] > array[idx]:
                     swapped = True
-                    Swap(array, idx, idx+1)
+                    Swap(array, idx-1, idx)
             n -= 1
             
-        else:   
+        else:
             flip = True
-                         
-            for idx in range(n2-1):
+            print(array, "A", l-n-1, n2-1)
+            for idx in range(l-n-1, n2-1):
+                print(idx, idx+1)
                 if array[idx] > array[idx+1]:
                     swapped = True
                     Swap(array, idx, idx+1)

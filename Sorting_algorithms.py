@@ -24,7 +24,6 @@ class Sort():
         self.array = Class.array
         self.length = len(Class.array)
         self.event = g_var.ev
-        self.swapped = True
         
         #self.access = 0
         #self.swap = 0
@@ -72,20 +71,20 @@ class Sort():
         
         Swap(self.array, idx1, idx2)
         
-        
-# Is it better to set self.swapped to some label rather than just spamming .self?
 
 class Bubble(Sort):
     def __init__(self, Class):
         super().__init__(Class)
         
-        while self.swapped:
-            self.swapped = False
+        swapped = True
+        
+        while swapped:
+            swapped = False
 
             for idx in range(self.length-1):
                 if self.lo_compare(idx, idx+1):
 
-                    self.swapped = True
+                    swapped = True
                     self.lo_swap(idx, idx+1)
         
         end()
@@ -103,14 +102,15 @@ class Bubble_opt1(Sort):
     def __init__(self, Class):
         super().__init__(Class)
         
+        swapped = True
         n = self.length
 
-        while self.swapped:
-            self.swapped = False
+        while swapped:
+            swapped = False
             
             for idx in range(n-1):
                 if self.lo_compare(idx, idx+1):
-                    self.swapped = True
+                    swapped = True
                     self.lo_swap(idx, idx+1)
             n -= 1
         
@@ -146,34 +146,38 @@ class Cocktail_shaker(Sort):
         super().__init__(Class)
         
         # improve this function, not gonna watch pseudo code yet
-        self.swapped = True
+        swapped = True
         flip = False
+        l = self.length
         n = self.length-1
         n2 = self.length
-
-        while self.swapped:
-            self.swapped = False
+        
+        while swapped:
+            swapped = False
 
             if flip:
                 flip = False
 
-                for idx in range(n-1, 0, -1):
-                    if self.lo_compare(idx, idx+1):
-                        self.swapped = True
-                        self.lo_swap(idx, idx+1)
+                for idx in range(n2-1, l-n-1, -1):
+
+                    if self.lo_compare(idx-1,idx):
+                        swapped = True
+                        self.lo_swap(idx-1, idx)
                 n -= 1
 
-            else:   
+            else:
                 flip = True
 
-                for idx in range(n2-1):
-                    if self.lo_compare(idx, idx+1):
-                        self.swapped = True
+                for idx in range(l-n-1, n2-1):
+
+                    if self.lo_compare(idx,idx+1):
+                        swapped = True
                         self.lo_swap(idx, idx+1)
                 n2 -= 1
 
         end()
         return None
+    
 
     
 
