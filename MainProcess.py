@@ -1,15 +1,12 @@
-from multiprocessing import Process, Lock
 import threading as th
+import psutil
+import os
+import tqdm
 from time import sleep
 
 import Source_array
-import Sorting_algorithms as Algorithms
+import Sorting_algorithms as Sort_al
 import g_var
-
-
-# Don't put () on target, or it will return result of that function!
-
-# Having headache searching how to run thread, darn.
 
 class ANSI_C():
     
@@ -50,6 +47,7 @@ class Selection_page():
 def Visualizing(Class):
     # Vertical for now
     # TODO: add more color detail and print sorting algorithms' name
+    # TODO: Find a way to print in smaller Area, like using half-sized charactors.
     
     frame = 0
     while g_var.s_alive:
@@ -66,11 +64,9 @@ def Visualizing(Class):
                 
             else:
                 color = ANSI_C.END
-                #color = ANSI_C.GRN if idx == g_var.index else ANSI_C.END
                 
-            print(color + "#" * i + ANSI_C.END, sep='', end='\n')
+            print(color + "█" * i + ANSI_C.END, sep='', end='\n')
         
-        #out = "Frame:" + str(frame).rjust(8) + "Access:".rjust(14) + str(g_var.access).rjust(22)
         out = ["Frame : " + str(frame)]
         out.append("Access: " + Colorize(g_var.access, 'YEL'))
         out.append("Swap  : " + Colorize(g_var.swap, 'PUR'))
@@ -94,20 +90,30 @@ class Loader():
     def __exit__(self):
         pass
         # kill process or reset 'source' instance, idk
+
         
+def Check_ANSI():
+    if psutil.Process(os.getpid()).parent().name() != 'bash':
+        
+        print("Running on CMD, Importing Colorama.init")
+        from colorama import init
+        
+        init()
+        
+    else:
+        print("Running on ANSI compatable Terminal.")
+    
+    sleep(1)
+    
     
 if __name__ == '__main__':
     # running as main
-    test_case = Source_array.Source(25, 0.03)
     
-    '''
-    lock = Lock()
+    Check_ANSI()
     
-    sorter = Process(target = Algorithms.Bubble, args = (test_case.array, lock))
-    visual = Process(target = Visualizing, args = (test_case.array, test_case.delay))
-    '''
+    test_case = Source_array.Source(20, 0.03)
     
-    sorter = th.Thread(target = Algorithms.Cocktail_shaker, args = (test_case,))
+    sorter = th.Thread(target = Sort_al.Cocktail_shaker, args = (test_case,))
     visual = th.Thread(target = Visualizing, args = (test_case,))
     
     

@@ -81,6 +81,7 @@ def Cocktail_shaker(array):
     return array
     
     
+    #TODO: fix this
 def Cocktail_shaker_opt1(array):
     flip = False
     start = 0
