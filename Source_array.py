@@ -9,7 +9,6 @@ def shuffle(array, length = -1):
     if length < 0:
         length = len(array)
     
-    print(length)
     for i in range(length):
         r = random.randint(0, length-i-1)
         Swap(array, r, -1-i)

@@ -48,6 +48,7 @@ def Visualizing(Class):
     # Vertical for now
     # TODO: add more color detail and print sorting algorithms' name
     # TODO: Find a way to print in smaller Area, like using half-sized charactors.
+    # TODO: set Blue for Current, Red for Min. Item, Yellow for sorted. (for selection sort.)
     
     frame = 0
     while g_var.s_alive:
@@ -80,17 +81,20 @@ def Visualizing(Class):
     
     print("Sort complete")
         
-
-# Will load up entire list of sorts and run one by one, far way to go.     
-class Loader():
-    def __init__(self, al_list):
-        pass
-        # do something
         
-    def __exit__(self):
-        pass
-        # kill process or reset 'source' instance, idk
+        
+def Al_loader():
+    for idx, func in enumerate(Sort_al.__all__):
+        print(idx, func.rjust(5))
+    
+    while True:
+        try:
+            sel = int(input("Type index of Function to Test: "))
+            return Sort_al.__all__[sel]
 
+        except Exception as ex:
+            print(ex, "/ Try again.")
+        
         
 def Check_ANSI():
     if psutil.Process(os.getpid()).parent().name() != 'bash':
@@ -104,6 +108,22 @@ def Check_ANSI():
         print("Running on ANSI compatable Terminal.")
     
     sleep(1)
+
+def Get_testcase():
+    print("[ Type 0 or string to use default value ]")
+    # Bad usage of try-except? idk, no time to fix this now.
+    
+    try:
+        item_count = int(input("Type Number of items to sort: "))
+    except:
+        item_count = 0
+    
+    try:
+        delay = int(input("Type delay in milisecond(s): "))/1000
+    except:
+        delay = 0
+    
+    return (item_count if item_count > 0 else 20, delay if delay > 0 else 0.05)
     
     
 if __name__ == '__main__':
@@ -111,9 +131,10 @@ if __name__ == '__main__':
     
     Check_ANSI()
     
-    test_case = Source_array.Source(20, 0.03)
     
-    sorter = th.Thread(target = Sort_al.Cocktail_shaker, args = (test_case,))
+    test_case = Source_array.Source(*Get_testcase())  #  * as unpacker!
+    
+    sorter = th.Thread(target = getattr(Sort_al, Al_loader()), args = (test_case,))
     visual = th.Thread(target = Visualizing, args = (test_case,))
     
     

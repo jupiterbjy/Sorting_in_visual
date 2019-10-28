@@ -93,7 +93,6 @@ def Cocktail_shaker_opt1(array):
         new_end = end
         new_start = start
         
-        time.sleep(1)
         
         if flip:
             flip = False
@@ -116,24 +115,20 @@ def Cocktail_shaker_opt1(array):
             
     return array
 
-def Bubble_opt2(array):
-    n = len(array)
-    while True:
-        newn = 0
-        
-        for idx in range(n-1):
-            if array[idx] > array[idx+1]:
-                Swap(array, idx, idx+1)
-                newn = idx+1
-        
-        n = newn
-        
-        if n<=1:
-            break
-    return array
 
-def Selection():
-    pass
+def Selection(array):
+    length = len(array)
+    
+    for loop in range(length):
+        largest = 0
+        
+        for idx in range(length - loop):
+            if array[idx] > array[largest]:
+                largest = idx
+                
+        Swap(array, idx, largest)
+    
+    return array
 
 
     

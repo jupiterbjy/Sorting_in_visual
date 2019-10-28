@@ -1,33 +1,28 @@
 import time
 import g_var
 
-# Created by looking at pseudo code in en wiki
+# Created by looking at pseudo code in eng. wiki
 
-__all__ = ['Bubble', 'Bubble_opt1', 'Bubble_opt2', 'Selection']
-
+__all__ = ['Bubble', 'Bubble_opt1', 'Bubble_opt2', 'Cocktail_shaker', 'Selection']
 
 # Cleanup Color marks and let Visual thread end of thread.
-
 def end():
     g_var.Color_reset()
     g_var.s_alive = False
     
+# Swaps.
 def Swap(a, b, c):
     a[b], a[c] = a[c], a[b]
         
 
 # Not sure if this was good idea
-# TODO: Improve colouring or event wait/clear timing
+# TODO: Improve colouring as listed on 'Visualizing' function in MainProcess.py
 
 class Sort():
     def __init__(self, Class):
         self.array = Class.array
         self.length = len(Class.array)
         self.event = g_var.ev
-        
-        #self.access = 0
-        #self.swap = 0
-    
     
     def lo_list(self, index):
         self.event.wait()
@@ -36,8 +31,6 @@ class Sort():
         
         g_var.selected = index
         g_var.access += 1
-        #self.access += 1
-        
         return self.array[index]
     
     
@@ -46,10 +39,6 @@ class Sort():
         self.event.clear()
         g_var.Color_reset()
         
-        # TODO: add mode trigger to enable compare colouring or not
-        # return 1 if self.lo_list(self, idx1) > self.lo_list(self, idx2) else 0
-        
-        #g_var.selected = idx1
         g_var.access += 2
         g_var.comp_target = [idx1, idx2]
         
@@ -63,10 +52,6 @@ class Sort():
         
         g_var.access += 2
         g_var.swap += 1
-        #self.access += 2
-        #self.swap += 1
-        
-        #g_var.selected = [idx1, idx2]
         g_var.swap_target = [idx1, idx2]
         
         Swap(self.array, idx1, idx2)
@@ -178,5 +163,20 @@ class Cocktail_shaker(Sort):
         end()
         return None
 
-
+class Selection(Sort):
+    def __init__(self, Class):
+        super().__init__(Class)
+        
+        length = self.length
     
+        for loop in range(length):
+            largest = 0
+        
+            for idx in range(length - loop):
+                if self.lo_compare(idx, largest):
+                    largest = idx
+
+            self.lo_swap(idx, largest)
+        
+        end()
+        return None
