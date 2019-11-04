@@ -81,8 +81,7 @@ def Visualizing(Class):
     
     print("Sort complete")
         
-        
-        
+    
 def Al_loader():
     for idx, func in enumerate(Sort_al.__all__):
         print(idx, func.rjust(5))
@@ -109,6 +108,7 @@ def Check_ANSI():
     
     sleep(1)
 
+    
 def Get_testcase():
     print("[ Type 0 or string to use default value ]")
     # Bad usage of try-except? idk, no time to fix this now.

@@ -1,16 +1,18 @@
 import time
 import g_var
+import member_loader
 
-# Created by looking at pseudo code in eng. wiki
+'''
+Created by looking at pseudo code in eng. wiki
+Stores modified sorting algorithms based on 'pure' ones.
+'''
 
-__all__ = ['Bubble', 'Bubble_opt1', 'Bubble_opt2', 'Cocktail_shaker', 'Selection']
-
-# Cleanup Color marks and let Visual thread end of thread.
 def end():
+    'Cleanup Color marks and let Visual thread end of thread.'
     g_var.Color_reset()
     g_var.s_alive = False
     
-# Swaps.
+    
 def Swap(a, b, c):
     a[b], a[c] = a[c], a[b]
         
@@ -180,3 +182,8 @@ class Selection(Sort):
         
         end()
         return None
+    
+    
+
+__all__ = member_loader.ListClass(__name__, name_only = True)
+__all__.remove('Sort')

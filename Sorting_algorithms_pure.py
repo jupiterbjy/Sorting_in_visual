@@ -1,6 +1,14 @@
-# Stores Function-formed algorithms for ease of self-creation
+import inspect
+from sys import modules
+
+import member_loader
+
+'''Stores Function-formed algorithms for ease of self-creation'''
 # TODO: find better word than 'creation', have no Dictionary for now.
 # import Sorting_algorithms_pure as sa
+
+__all__ = Member_loader.ListFunction(__name__, name_only = True)
+
 
 def Swap(a, b, c):
     a[b], a[c] = a[c], a[b]
