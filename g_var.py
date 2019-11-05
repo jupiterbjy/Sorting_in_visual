@@ -6,13 +6,22 @@ flag = False
 s_alive = True
 
 index = 0
-swap_target = []
-comp_target = []
-
 access = 0
 swap = 0
 
-def Color_reset():
+swap_target = []
+comp_target = []
+sorted_area = []
+
+markers = [swap_target, comp_target, sorted_area]
+
+def Color_reset(ALL = False):
     index = 0
-    swap_target.clear()
-    comp_target.clear()
+    print(markers)
+    
+    if ALL:
+        for i in markers:
+            i.clear()
+    else:
+        swap_target.clear()
+        comp_target.clear()

@@ -7,12 +7,14 @@ Created by looking at pseudo code in eng. wiki
 Stores modified sorting algorithms based on 'pure' ones.
 '''
 
-def end():
+def End():
     'Cleanup Color marks and let Visual thread end of thread.'
-    g_var.Color_reset()
+    g_var.Color_reset(ALL = True)
     g_var.s_alive = False
     
-    
+def gen_arr(a, b):
+    return list(range(a, b+1))
+
 def Swap(a, b, c):
     a[b], a[c] = a[c], a[b]
         
@@ -74,13 +76,13 @@ class Bubble(Sort):
                     swapped = True
                     self.lo_swap(idx, idx+1)
         
-        end()
+        End()
         return None
     
     # this don't do anything unless used like 'with bubble as bla bla'
     '''
     def __exit__(self):
-        end()
+        End()
         print('Sorted')
     '''
 
@@ -101,7 +103,7 @@ class Bubble_opt1(Sort):
                     self.lo_swap(idx, idx+1)
             n -= 1
         
-        end()
+        End()
         return None
     
     
@@ -124,7 +126,7 @@ class Bubble_opt2(Sort):
             if n <= 1:
                 break
         
-        end()
+        End()
         return None
     
     
@@ -132,12 +134,10 @@ class Cocktail_shaker(Sort):
     def __init__(self, Class):
         super().__init__(Class)
         
-        # improve this function, not gonna watch pseudo code yet
         swapped = True
         flip = False
-        l = self.length
-        n = self.length
-        n2 = self.length
+        start = 0
+        end = self.length - 1
         
         while swapped:
             swapped = False
@@ -145,24 +145,28 @@ class Cocktail_shaker(Sort):
             if flip:
                 flip = False
 
-                for idx in range(n2-1, l-n, -1):
+                for idx in range(end, start, -1):
 
                     if self.lo_compare(idx-1,idx):
                         swapped = True
                         self.lo_swap(idx-1, idx)
-                n -= 1
+                start += 1
 
             else:
                 flip = True
 
-                for idx in range(l-n, n2-1):
+                for idx in range(start, end):
 
                     if self.lo_compare(idx,idx+1):
                         swapped = True
                         self.lo_swap(idx, idx+1)
-                n2 -= 1
-
-        end()
+                end -= 1
+            
+            # Generate Sorted areas
+            sorted_new = gen_arr(0, start-1) + gen_arr(end+1, self.length)
+            g_var.sorted_area += (set(sorted_new) - set(g_var.sorted_area))
+            
+        End()
         return None
 
 class Selection(Sort):
@@ -180,7 +184,7 @@ class Selection(Sort):
 
             self.lo_swap(idx, largest)
         
-        end()
+        End()
         return None
     
     

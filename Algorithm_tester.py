@@ -1,17 +1,32 @@
 import unittest
-import Sorting_algorithms as SA
+from threading import Thread, Event
+import Sorting_algorithms_pure as SAP
 
-class loader(testcase):
-    for i in SA.__all__:
-        print("<", i, ">")
-        eval('SA.i' + '(testcase)')
+
+def Loader(testcase):
+    
+    out = SAP.Cocktail_shaker(testcase)
+    
+    return out
+
 
 class TestBasicOutput(unittest.TestCase):
-    
-    def Reversed(self):
+    def setUp(self):
+        global test, correct
+        
         test = [20 - i for i in range(20)]
         correct = [i+1 for i in range(20)]
-        test = loader(test)
-        
+    
+    
+    def tearDown(self):
         print(test, '\n', correct)
-        self.assertEqual(correct, test)
+    
+    
+    def test_Reversed(self):
+        global test
+
+        self.assertEqual(correct, Loader(test))
+
+        
+if __name__ == '__main__':
+    unittest.main()
