@@ -169,6 +169,36 @@ class Cocktail_shaker(Sort):
         End()
         return None
 
+    
+class Cocktail_shaker_opt1(Sort):
+    def __init__(self, Class):
+        super().__init__(Class)
+        
+        start = 0
+        end = self.length-1
+        import time
+
+        while start <= end:
+            new_end = start
+            new_start = end
+
+            for idx in range(start, end):
+                if self.lo_compare(idx, idx+1):
+                    self.lo_swap(idx, idx+1)
+                    new_end = idx
+
+            end = new_end
+
+            for idx in range(end, start, -1):
+                if self.lo_compare(idx-1, idx):
+                    self.lo_swap(idx-1, idx)
+                    new_start = idx-1
+
+            start = new_start
+        
+        End()
+    
+    
 class Selection(Sort):
     def __init__(self, Class):
         super().__init__(Class)

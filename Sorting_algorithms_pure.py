@@ -7,6 +7,25 @@ import member_loader
 # TODO: find better word than 'creation', have no Dictionary for now.
 # import Sorting_algorithms_pure as sa
 
+def Status(data, blacklist = []):
+    'Used for Outputting variables with exceptions'
+    
+    output = []
+    blacklist.append('END_indicator')
+    
+    for i in data.keys():
+        for i2 in blacklist:
+            if i2 == 'END_indicator':
+                break
+                
+            if i2 in i:
+                continue
+            else:
+                output.extend([i, str(data[i])])
+    
+    blacklist = []  #prevent storing previous items.
+    print(' | '.join(output))
+    
 
 def Swap(a, b, c):
     a[b], a[c] = a[c], a[b]
@@ -87,37 +106,35 @@ def Cocktail_shaker(array):
     return array
     
     
-    #TODO: fix this
+    # idk why I spent 2 hours fixthing this. not sure why it's fixed.
+    # needs further testing
 def Cocktail_shaker_opt1(array):
-    flip = False
     start = 0
     end = len(array)-1
     import time
     
-    while start < end:
+    while start <= end:
+        #time.sleep(0.2)
+        new_end = start
+        new_start = end
         
-        new_end = end
-        new_start = start
+        for idx in range(start, end):
+            if array[idx] > array[idx+1]:
+                Swap(array, idx, idx+1)
+                new_end = idx
         
+        end = new_end
+
+        #Status(vars(), ['time'])
         
-        if flip:
-            flip = False
-            
-            for idx in range(end, start, -1):
-                if array[idx-1] > array[idx]:
-                    Swap(array, idx-1, idx)
-                    new_end = idx
+        for idx in range(end, start, -1):
+            if array[idx-1] > array[idx]:
+                Swap(array, idx-1, idx)
+                new_start = idx-1
+                
+        start = new_start
         
-        else:
-            flip = True
-                         
-            for idx in range(start, end):
-                if array[idx] > array[idx+1]:
-                    Swap(array, idx, idx+1)
-                    new_start = idx
-        
-        new_start -= 1
-        print(array, start, end)
+        #Status(vars(), ['time'])
             
     return array
 

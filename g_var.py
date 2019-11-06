@@ -17,7 +17,6 @@ markers = [swap_target, comp_target, sorted_area]
 
 def Color_reset(ALL = False):
     index = 0
-    print(markers)
     
     if ALL:
         for i in markers:

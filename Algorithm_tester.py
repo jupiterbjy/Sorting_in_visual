@@ -1,13 +1,14 @@
 import unittest
 from threading import Thread, Event
-import Sorting_algorithms_pure as SAP
-
+import Sorting_algorithms_pure as SAP    
 
 def Loader(testcase):
+    for idx, item in enumerate(SAP.__all__):
+        print(idx, item)
     
-    out = SAP.Cocktail_shaker(testcase)
+    out = getattr(SAP, SAP.__all__[int(input('Enter function to test:'))])
     
-    return out
+    return out(testcase)
 
 
 class TestBasicOutput(unittest.TestCase):

@@ -71,14 +71,23 @@ def Visualizing(Class, mode = 0):
     
     
     def Zipped(array):
-        for step in range(len(array)):
-            out2  = []
+        lines = []
+        for step in range(int(len(array)/10)):
+            out2 = []
             for i in array:
-                if i < (step+1)*10 and i > step*10:
-                    out2.append(' ' + str(i - step*10))
+                if i <= (step+1)*10 and i > step*10:
+                    if i%10 == 0:
+                        continue
+                    else:
+                        out2.append(('' + str(i - step*10)))
+                elif i < step*10:
+                    out2.append(' ')
                 else:
-                    out2.append(str(10))
-            print(''.join(out2))
+                    out2.append('^')
+            lines.append(''.join(out2))
+            
+        for i in lines[::-1]:
+            print(i)
     
                               
     while g_var.s_alive:        #runs until sort process finishes
