@@ -7,89 +7,63 @@ from time import sleep
 import Source_array
 import Sorting_algorithms as Sort_al
 import g_var
+from ANSI_table import *
 
-class ANSI_C():
-    
-    RED = '\033[91m'
-    GRN = '\033[92m'
-    BLU = '\033[94m'
-    YEL = '\033[93m'
-    PUR = '\033[94m'
-    CYA = '\033[96m'
-    END = '\033[0m'
-    BOLD = '\033[1m'
-    HEADER = '\033[95m'
-    UNDERLINE = '\033[4m'
-    
-    table = {
-        "RED" : '\033[91m',
-        "GRN" : '\033[92m',
-        "BLU" : '\033[94m',
-        "YEL" : '\033[93m',
-        "PUR" : '\033[94m',
-        "CYA" : '\033[96m',
-        "END" : '\033[0m',
-        "BOLD" : '\033[1m',
-        "HEADER" : '\033[95m',
-        "UNDERLINE" : '\033[4m',
-    }
-    
-    
-def Colorize(txt, color):
-    s = str(txt)
-    return ANSI_C.table[color] + s + ANSI_C.table["END"]
-        
-
-class Selection_page():
-    pass
-    
-    
 def Visualizing(Class, mode = 0):
     '''
     Visualizer for Sorting actions, currently only outputs in vertical way.
     '''
-    # TODO: add more color detail and print sorting algorithms' name
-    # TODO: Find a way to print in smaller Area, like using half-sized charactors.
     # TODO: set Blue for Current, Red for Min. Item, Yellow for sorted. (for selection sort.)
     
-    frame = 0
+    def Color_matcher(index):
+        if index in g_var.comp_target:
+            color = ANSI_C.YEL
+
+        elif index in g_var.swap_target:
+            color = ANSI_C.PUR
+
+        elif index in g_var.sorted_area:
+            color = ANSI_C.RED
+
+        else:
+            color = ANSI_C.END
+            
+        return color
+                
     
     def Vertcial(array):
         for idx, i in enumerate(array):
-            if idx in g_var.comp_target:
-                color = ANSI_C.YEL
-
-            elif idx in g_var.swap_target:
-                color = ANSI_C.PUR
-
-            elif idx in g_var.sorted_area:
-                color = ANSI_C.RED
-            else:
-                color = ANSI_C.END
-
-            print(color + "█" * i + ANSI_C.END, sep='', end='\n')
+            print(Color_matcher(idx), end='', sep='')
+            print("█" * i + ANSI_C.END, sep='')
     
     
     def Zipped(array):
         lines = []
         for step in range(int(len(array)/10)):
             out2 = []
-            for i in array:
-                if i <= (step+1)*10 and i > step*10:
-                    if i%10 == 0:
-                        continue
-                    else:
-                        out2.append(('' + str(i - step*10)))
-                elif i < step*10:
+            
+            for idx, i in enumerate(array):
+                out2.append(Color_matcher(idx))
+                
+                if i < (step + 1) * 10 and i >= step * 10:
+                    out2.append(('' + str(i - step * 10)))
+                    
+                elif i < step * 10:
                     out2.append(' ')
+                    
                 else:
                     out2.append('^')
+                    
+                out2.append(ANSI_C.END)
+                    
             lines.append(''.join(out2))
             
         for i in lines[::-1]:
             print(i)
     
-                              
+    
+    frame = 0
+    
     while g_var.s_alive:        #runs until sort process finishes
         sleep(Class.delay)
 
@@ -99,9 +73,11 @@ def Visualizing(Class, mode = 0):
             Vertcial(Class.array)
         else:
             Zipped(Class.array)
-
-        out = ["Frame : " + str(frame)]
-
+            
+        global sort_name
+        
+        out = ["Sort  : " + str(sort_name)]
+        out.append("Frame : " + str(frame))
         out.append("Access: " + Colorize(g_var.access, 'YEL'))
         out.append("Swap  : " + Colorize(g_var.swap, 'PUR'))
 
@@ -122,24 +98,13 @@ def Al_loader():
     while True:
         try:
             sel = int(input("Type index of Function to Test: "))
+            global sort_name
+            sort_name = Sort_al.__all__[sel]
+            
             return Sort_al.__all__[sel]
 
         except Exception as ex:
             print(ex, "/ Try again.")
-        
-        
-def Check_ANSI():
-    if psutil.Process(os.getpid()).parent().name() != 'bash':
-        
-        print("Running on CMD, Importing Colorama.init")
-        from colorama import init
-        
-        init()
-        
-    else:
-        print("Running on ANSI compatable Terminal.")
-    
-    sleep(1)
 
     
 def Get_testcase():

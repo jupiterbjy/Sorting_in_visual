@@ -1,6 +1,8 @@
 import unittest
 from threading import Thread, Event
+
 import Sorting_algorithms_pure as SAP    
+from Source_array import shuffle
 
 def Loader(testcase):
     for idx, item in enumerate(SAP.__all__):
@@ -25,9 +27,12 @@ class TestBasicOutput(unittest.TestCase):
     
     def test_Reversed(self):
         global test
-
         self.assertEqual(correct, Loader(test))
-
+        
+    def test_Random(self):
+        global test
+        test = shuffle(test)
+        self.assertEqual(correct, Loader(test))
         
 if __name__ == '__main__':
     unittest.main()

@@ -154,5 +154,18 @@ def Selection(array):
     return array
 
 
-__all__ = member_loader.ListFunction(__name__, name_only = True)
-__all__.remove('Swap')
+def Insertion(array):
+    length = len(array)
+    
+    for i in range(1, length):
+        j = i
+        
+        while j > 0 and array[j-1] > array[j]:
+            Swap(array, j, j-1)
+            j -= 1
+    
+    return array
+            
+
+excepts = ['Swap', 'Status']
+__all__ = member_loader.ListFunction(__name__, name_only = True, blacklist = excepts)

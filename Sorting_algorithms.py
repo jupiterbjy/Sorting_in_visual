@@ -9,15 +9,32 @@ Stores modified sorting algorithms based on 'pure' ones.
 
 def End():
     'Cleanup Color marks and let Visual thread end of thread.'
-    g_var.Color_reset(ALL = True)
+    g_var.Color_reset()
+    g_var.ev.wait()
     g_var.s_alive = False
+
     
-def gen_arr(a, b):
-    return list(range(a, b+1))
+def Add_Sorted_Area(a1, a2 = -1, b1 = -1, b2 = -1):
+    'Generate sorted area'
+    
+    def gen_arr(a, b):
+        return list(range(a, b+1))
+    
+    if a2 == -1:
+        tmp = [a1]
+    
+    elif b1 == -1 and b2 == -1:
+        tmp = gen_arr(a1, a2)
+        
+    else:
+        tmp = gen_arr(a1, a2) + gen_arr(b1, b2)
+    
+    g_var.sorted_area += (set(tmp) - set(g_var.sorted_area))
+    
 
 def Swap(a, b, c):
     a[b], a[c] = a[c], a[b]
-        
+
 
 # Not sure if this was good idea
 # TODO: Improve colouring as listed on 'Visualizing' function in MainProcess.py
@@ -163,8 +180,7 @@ class Cocktail_shaker(Sort):
                 end -= 1
             
             # Generate Sorted areas
-            sorted_new = gen_arr(0, start-1) + gen_arr(end+1, self.length)
-            g_var.sorted_area += (set(sorted_new) - set(g_var.sorted_area))
+            Add_Sorted_Area(0, start-1, end+1, self.length)
             
         End()
         return None
@@ -188,14 +204,17 @@ class Cocktail_shaker_opt1(Sort):
                     new_end = idx
 
             end = new_end
-
+            
+            Add_Sorted_Area(0, start-1, end+1, self.length)
+            
             for idx in range(end, start, -1):
                 if self.lo_compare(idx-1, idx):
                     self.lo_swap(idx-1, idx)
                     new_start = idx-1
 
             start = new_start
-        
+            
+            Add_Sorted_Area(0, start, end+1, self.length)
         End()
     
     
@@ -213,11 +232,25 @@ class Selection(Sort):
                     largest = idx
 
             self.lo_swap(idx, largest)
+            Add_Sorted_Area(idx, idx)
         
         End()
-        return None
+        
     
+class Insertion(Sort):
+    def __init__(self, Class):
+        super().__init__(Class)
+        
+        for i in range(1, self.length):
+            j = i
+            
+            while j > 0 and self.lo_compare(j-1, j):
+                self.lo_swap(j, j-1)
+                j -= 1
+                
+                Add_Sorted_Area(0, i)
     
+        End()
 
-__all__ = member_loader.ListClass(__name__, name_only = True)
-__all__.remove('Sort')
+        
+__all__ = member_loader.ListClass(__name__, name_only = True, blacklist = ['Sort'])
