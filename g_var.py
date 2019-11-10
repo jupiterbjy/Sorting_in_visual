@@ -4,6 +4,7 @@ from threading import Event
 ev = Event()
 flag = False
 s_alive = True
+CMD = False
 
 index = 0
 access = 0

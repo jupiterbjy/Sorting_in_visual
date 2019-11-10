@@ -55,7 +55,7 @@ class Sort():
         return self.array[index]
     
     
-    def lo_compare(self, idx1, idx2):
+    def lo_compare(self, idx1, idx2, equal = False):
         self.event.wait()
         self.event.clear()
         g_var.Color_reset()
@@ -63,7 +63,10 @@ class Sort():
         g_var.access += 2
         g_var.comp_target = [idx1, idx2]
         
-        return 1 if self.array[idx1] > self.array[idx2] else 0
+        if equal:
+            return 1 if self.array[idx1] >= self.array[idx2] else 0
+        else:
+            return 1 if self.array[idx1] > self.array[idx2] else 0
 
     
     def lo_swap(self, idx1, idx2):
@@ -168,7 +171,8 @@ class Cocktail_shaker(Sort):
                         swapped = True
                         self.lo_swap(idx-1, idx)
                 start += 1
-
+                
+                Add_Sorted_Area(0, start-1)
             else:
                 flip = True
 
@@ -178,10 +182,10 @@ class Cocktail_shaker(Sort):
                         swapped = True
                         self.lo_swap(idx, idx+1)
                 end -= 1
-            
-            # Generate Sorted areas
-            Add_Sorted_Area(0, start-1, end+1, self.length)
-            
+                
+                Add_Sorted_Area(end+1, self.length)
+        
+        Add_Sorted_Area(0, self.length)
         End()
         return None
 
@@ -205,7 +209,7 @@ class Cocktail_shaker_opt1(Sort):
 
             end = new_end
             
-            Add_Sorted_Area(0, start-1, end+1, self.length)
+            Add_Sorted_Area(end+1, self.length)
             
             for idx in range(end, start, -1):
                 if self.lo_compare(idx-1, idx):
@@ -214,7 +218,7 @@ class Cocktail_shaker_opt1(Sort):
 
             start = new_start
             
-            Add_Sorted_Area(0, start, end+1, self.length)
+            Add_Sorted_Area(0, start)
         End()
     
     
@@ -252,5 +256,85 @@ class Insertion(Sort):
     
         End()
 
+        
+class Heap(Sort):
+    # Boi, he's fast - reference from Kirb 8.0
+    def __init__(self, Class):
+        super().__init__(Class)
+        
+        def heapify(unsorted, idx, heap_size):
+            
+            largest = idx
+            l_idx = 2 * idx + 1
+            r_idx = 2 * idx + 2
+
+            if l_idx < heap_size and unsorted[l_idx] > unsorted[largest]:
+                largest = l_idx
+
+            if r_idx < heap_size and unsorted[r_idx] > unsorted[largest]:
+                largest = r_idx
+
+            if largest != idx:
+                unsorted[largest], unsorted[idx] = unsorted[idx], unsorted[largest]
+                heapify(unsorted, largest, heap_size)
+                
+        for i in range(self.length//2 - 1, -1, -1):
+            heapify(self.array, i, self.length)
+
+        for i in range(self.length - 1, 0, -1):
+            
+            self.lo_swap(0, i)
+            Add_Sorted_Area(i, i)
+            
+            heapify(self.array, 0, i)
+        
+        Add_Sorted_Area(0, 0)
+        End()
+        
+        
+class Merge(Sort):
+    def __init__(self, Class):
+        super().__init__(Class)
+        
+        L, R = 0, self.length-1
+        
+        def List_Merge(array, left, right, mid):
+            Sorted = []
+            l, r, m = left, right, mid+1
+
+            while(l <= mid and m <= right):
+
+                if self.lo_compare(l, m, equal = True):
+                    Sorted.append(array[l])
+                    l += 1
+                else:
+                    Sorted.append(array[m])
+                    m += 1
+
+            if l > mid:
+                for idx in range(m, right+1):
+                    Sorted.append(array[idx])
+            else:
+                for idx in range(l, mid+1):
+                    Sorted.append(array[idx])
+
+            for idx in range(right, left-1, -1):
+                #Status(vars(), ['time'])
+                array[idx] = Sorted.pop()
+            
+            
+        def Sub_merge(array, left, right):
+
+            if left < right:
+                mid = (left + right)//2
+                Sub_merge(array, left, mid)
+                Sub_merge(array, mid+1, right)
+                List_Merge(array, left, right, mid)
+    
+    
+        Sub_merge(self.array, L, R)
+        End()
+    
+            
         
 __all__ = member_loader.ListClass(__name__, name_only = True, blacklist = ['Sort'])

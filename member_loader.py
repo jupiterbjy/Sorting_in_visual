@@ -33,4 +33,4 @@ def ListClass(name, name_only = False, blacklist = []):
     return ListTarget(name, inspect.isclass, name_only, blacklist)
     
 def ListFunction(name, name_only = False, blacklist = []):
-    return ListTarget(name, inspect.isfunction, blacklist)
+    return ListTarget(name, inspect.isfunction, name_only, blacklist)

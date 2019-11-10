@@ -1,99 +1,60 @@
 import threading as th
-import psutil
-import os
-import tqdm
-from time import sleep
+from time import sleep, time
 
 import Source_array
 import Sorting_algorithms as Sort_al
 import g_var
-from ANSI_table import *
+from Output_Type import *
+
 
 def Visualizing(Class, mode = 0):
+    
     '''
     Visualizer for Sorting actions, currently only outputs in vertical way.
     '''
-    # TODO: set Blue for Current, Red for Min. Item, Yellow for sorted. (for selection sort.)
     
-    def Color_matcher(index):
-        if index in g_var.comp_target:
-            color = ANSI_C.YEL
-
-        elif index in g_var.swap_target:
-            color = ANSI_C.PUR
-
-        elif index in g_var.sorted_area:
-            color = ANSI_C.RED
-
-        else:
-            color = ANSI_C.END
-            
-        return color
-                
-    
-    def Vertcial(array):
-        for idx, i in enumerate(array):
-            print(Color_matcher(idx), end='', sep='')
-            print("█" * i + ANSI_C.END, sep='')
-    
-    
-    def Zipped(array):
-        lines = []
-        for step in range(int(len(array)/10)):
-            out2 = []
-            
-            for idx, i in enumerate(array):
-                out2.append(Color_matcher(idx))
-                
-                if i < (step + 1) * 10 and i >= step * 10:
-                    out2.append(('' + str(i - step * 10)))
-                    
-                elif i < step * 10:
-                    out2.append(' ')
-                    
-                else:
-                    out2.append('^')
-                    
-                out2.append(ANSI_C.END)
-                    
-            lines.append(''.join(out2))
-            
-        for i in lines[::-1]:
-            print(i)
-    
-    
+    start_time = time()
     frame = 0
     
-    while g_var.s_alive:        #runs until sort process finishes
-        sleep(Class.delay)
-
+    while True:        #runs until sort process finishes
+        
         print("\n\n", "_" * Class.length, sep='')
 
         if mode == 0:
             Vertcial(Class.array)
         else:
             Zipped(Class.array)
-            
+        
         global sort_name
         
         out = ["Sort  : " + str(sort_name)]
         out.append("Frame : " + str(frame))
         out.append("Access: " + Colorize(g_var.access, 'YEL'))
         out.append("Swap  : " + Colorize(g_var.swap, 'PUR'))
+        out.append("Time  : " + str(time() - start_time))
 
         print("_" * Class.length, sep='')
         print('\n'.join(out))
-
+        
+        
         frame += 1
 
+        sleep(Class.delay)
         g_var.ev.set()
+            
+        if g_var.s_alive:
+            Clear_Screen()
+        else:
+            
+            break
     
     print("Sort complete")
         
     
 def Al_loader():
     for idx, func in enumerate(Sort_al.__all__):
-        print(idx, func.rjust(5))
+        
+        print(idx, ' ' * (3 - len(str(idx))), func, sep = '')
     
     while True:
         try:
@@ -108,8 +69,9 @@ def Al_loader():
 
     
 def Get_testcase():
-    print("[ Type 0 or string to use default value ]")
-    # Bad usage of try-except? idk, no time to fix this now.
+    print('[ Type 0 or string to use default value ]')
+    print('[ Too low delay is not recommended.     ]', end = '\n\n')
+    # Bad usage of try-except? idk, no time to think of this now.
     
     try:
         i_count = int(input("Type Number of items to sort: "))
@@ -134,7 +96,7 @@ if __name__ == '__main__':
     global mode
     
     Check_ANSI()
-    
+    sleep(0.2)
     
     test_case = Source_array.Source(*Get_testcase())  #  * as unpacker!
     

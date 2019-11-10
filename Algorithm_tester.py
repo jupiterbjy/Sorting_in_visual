@@ -4,12 +4,19 @@ from threading import Thread, Event
 import Sorting_algorithms_pure as SAP    
 from Source_array import shuffle
 
-def Loader(testcase):
-    for idx, item in enumerate(SAP.__all__):
-        print(idx, item)
+
+def Loader(testcase, secondrun = []):
+    if not secondrun:
+        for idx, item in enumerate(SAP.__all__):
+            print(idx, item)
+
+        out = getattr(SAP, SAP.__all__[int(input('Enter function to test:'))])
+        secondrun.append(out)
+    else:
+        out = secondrun[0]
     
-    out = getattr(SAP, SAP.__all__[int(input('Enter function to test:'))])
     
+    print('>',test)
     return out(testcase)
 
 

@@ -13,6 +13,8 @@
     
     
 > Check out this on codes
+    < Class Method vs instance method >
+    
     < Apply this to win10 CMD >
         https://stackoverflow.com/questions/287871/how-to-print-colored-text-in-terminal-in-python
     

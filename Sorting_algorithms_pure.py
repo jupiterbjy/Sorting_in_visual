@@ -165,7 +165,79 @@ def Insertion(array):
             j -= 1
     
     return array
-            
 
+
+def Heap(array):
+    
+    def heapify(unsorted, idx, heap_size):
+    # Understand this more, next time!
+        largest = idx
+        left_idx = 2 * idx + 1
+        right_idx = 2 * idx + 2
+        
+        if left_idx < heap_size and unsorted[left_idx] > unsorted[largest]:
+            largest = left_idx
+            
+        if right_idx < heap_size and unsorted[right_idx] > unsorted[largest]:
+            largest = right_idx
+            
+        if largest != idx:
+            unsorted[largest], unsorted[idx] = unsorted[idx], unsorted[largest]
+            heapify(unsorted, largest, heap_size)
+    
+    n = len(array)
+    for i in range(n//2 - 1, -1, -1):
+        heapify(array, i, n)
+        
+    for i in range(n-1, 0, -1):
+        Swap(array, 0, i)
+        heapify(array, 0, i)
+        
+    return array
+    
+    
+def Merge(array):
+    L, R = 0, len(array)-1
+    
+    # TODO: flip this over
+    def List_Merge(array, left, right, mid):
+        Sorted = []
+        l, r, m = left, right, mid+1
+        
+        while(l <= mid and m <= right):
+            
+            if array[l] <= array[m]:
+                Sorted.append(array[l])
+                l += 1
+            else:
+                Sorted.append(array[m])
+                m += 1
+                
+        if l > mid:
+            for idx in range(m, right+1):
+                Sorted.append(array[idx])
+        else:
+            for idx in range(l, mid+1):
+                Sorted.append(array[idx])
+
+        for idx in range(right, left-1, -1):
+            #Status(vars(), ['time'])
+            array[idx] = Sorted.pop()
+        
+        
+    def Sub_merge(array, left, right):
+        
+        if left < right:
+            mid = (left + right)//2
+            Sub_merge(array, left, mid)
+            Sub_merge(array, mid+1, right)
+            List_Merge(array, left, right, mid)
+    
+    
+    Sub_merge(array, L, R)
+    
+    return array
+    
+    
 excepts = ['Swap', 'Status']
 __all__ = member_loader.ListFunction(__name__, name_only = True, blacklist = excepts)

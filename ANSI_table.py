@@ -1,12 +1,32 @@
-__all__ = ['Check_ANSI', 'ANSI_C', 'Colorize']
-
-from time import sleep
-from psutil import Process
-import os
+import member_loader
 
 
+def Check_Bash():
+    from psutil import Process
+    import os
+    
+    if Process(os.getpid()).parent().name() == 'bash':
+        return True
+    else:
+        return False
+
+    
+def Clear_Screen(Run = []):
+    ''''Uses kwarg list's global-like property to store state'''
+    import os
+    
+    if not Run:
+        Run.append(Check_Bash())
+    
+    if Run[0]:
+        os.system('clear')
+    else:
+        os.system('cls')
+
+    
 def Check_ANSI(output = True):
-    if Process(os.getpid()).parent().name() != 'bash':
+    if Check_Bash():
+        
         if output:
             print("ANSI incompetible, Importing Colorama.init")
             
@@ -16,8 +36,6 @@ def Check_ANSI(output = True):
     else:
         if output:
             print("Running on ANSI compatable Terminal.")
-    
-    sleep(0.5)
 
     
 class ANSI_C():
@@ -46,7 +64,14 @@ class ANSI_C():
         "UNDERLINE" : '\033[4m',
     }
     
+def C_list(idx):
+    return ANSI_C.table[list(ANSI_C.table.keys())[idx]]
+    
 def Colorize(txt, color):
     s = str(txt)
     return ANSI_C.table[color] + s + ANSI_C.table["END"]
         
+    
+    
+__all__ = member_loader.ListFunction(__name__, name_only = True)
+__all__.append('ANSI_C')
