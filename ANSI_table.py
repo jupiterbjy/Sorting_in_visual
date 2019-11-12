@@ -25,7 +25,7 @@ def Clear_Screen(Run = []):
 
     
 def Check_ANSI(output = True):
-    if Check_Bash():
+    if not Check_Bash():
         
         if output:
             print("ANSI incompetible, Importing Colorama.init")

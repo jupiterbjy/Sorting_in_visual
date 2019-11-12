@@ -40,7 +40,7 @@ def Zipped(array):
                 out2.append(' ')
 
             else:
-                out2.append('^')
+                out2.append('█')
 
             out2.append(ANSI_C.END)
 

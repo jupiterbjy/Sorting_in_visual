@@ -45,14 +45,14 @@ class Sort():
         self.length = len(Class.array)
         self.event = g_var.ev
     
-    def lo_list(self, index):
+    
+    def lo_list(self):
         self.event.wait()
         self.event.clear()
         g_var.Color_reset()
         
-        g_var.selected = index
         g_var.access += 1
-        return self.array[index]
+        return self.array
     
     
     def lo_compare(self, idx1, idx2, equal = False):
@@ -221,6 +221,30 @@ class Cocktail_shaker_opt1(Sort):
             Add_Sorted_Area(0, start)
         End()
     
+
+class OddEven(Sort):
+    def __init__(self,Class):
+        super().__init__(Class)
+        
+        swapped = True
+        
+        while swapped:
+            swapped = False
+
+            for idx in range(0, self.length-1, 2):
+
+                if self.lo_compare(idx, idx+1):
+                    swapped = True
+                    self.lo_swap(idx, idx+1)
+
+            for idx in range(1, self.length-1, 2):
+
+                if self.lo_compare(idx, idx+1):
+                    swapped = True
+                    self.lo_swap(idx, idx+1)
+
+        End()
+    
     
 class Selection(Sort):
     def __init__(self, Class):
@@ -262,31 +286,33 @@ class Heap(Sort):
     def __init__(self, Class):
         super().__init__(Class)
         
-        def heapify(unsorted, idx, heap_size):
+        def heapify(idx, heap_size):
             
             largest = idx
             l_idx = 2 * idx + 1
             r_idx = 2 * idx + 2
 
-            if l_idx < heap_size and unsorted[l_idx] > unsorted[largest]:
+            if l_idx < heap_size and self.lo_compare(l_idx, largest):
                 largest = l_idx
 
-            if r_idx < heap_size and unsorted[r_idx] > unsorted[largest]:
+            if r_idx < heap_size and self.lo_compare(r_idx, largest):
                 largest = r_idx
 
             if largest != idx:
-                unsorted[largest], unsorted[idx] = unsorted[idx], unsorted[largest]
-                heapify(unsorted, largest, heap_size)
+                self.lo_swap(largest, idx)
+                heapify(largest, heap_size)
+                
                 
         for i in range(self.length//2 - 1, -1, -1):
-            heapify(self.array, i, self.length)
+            heapify(i, self.length)
 
         for i in range(self.length - 1, 0, -1):
             
             self.lo_swap(0, i)
+            
             Add_Sorted_Area(i, i)
             
-            heapify(self.array, 0, i)
+            heapify(0, i)
         
         Add_Sorted_Area(0, 0)
         End()
@@ -298,41 +324,42 @@ class Merge(Sort):
         
         L, R = 0, self.length-1
         
-        def List_Merge(array, left, right, mid):
+        def List_Merge(left, right, mid):
             Sorted = []
             l, r, m = left, right, mid+1
 
             while(l <= mid and m <= right):
 
-                if self.lo_compare(l, m, equal = True):
-                    Sorted.append(array[l])
+                if self.lo_compare(m, l, equal = True):
+                    Sorted.append(self.array[l])
                     l += 1
                 else:
-                    Sorted.append(array[m])
+                    Sorted.append(self.array[m])
                     m += 1
 
             if l > mid:
                 for idx in range(m, right+1):
-                    Sorted.append(array[idx])
+                    Sorted.append(self.array[idx])
             else:
                 for idx in range(l, mid+1):
-                    Sorted.append(array[idx])
+                    Sorted.append(self.array[idx])
 
             for idx in range(right, left-1, -1):
                 #Status(vars(), ['time'])
-                array[idx] = Sorted.pop()
+                self.lo_list()[idx] = Sorted.pop()
+                Add_Sorted_Area(idx)
             
             
-        def Sub_merge(array, left, right):
+        def Sub_merge(left, right):
 
             if left < right:
                 mid = (left + right)//2
-                Sub_merge(array, left, mid)
-                Sub_merge(array, mid+1, right)
-                List_Merge(array, left, right, mid)
+                Sub_merge(left, mid)
+                Sub_merge(mid+1, right)
+                List_Merge(left, right, mid)
     
     
-        Sub_merge(self.array, L, R)
+        Sub_merge(L, R)
         End()
     
             

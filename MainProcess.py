@@ -18,7 +18,7 @@ def Visualizing(Class, mode = 0):
     
     while True:        #runs until sort process finishes
         
-        print("\n\n", "_" * Class.length, sep='')
+        print("_" * Class.length, sep='')
 
         if mode == 0:
             Vertcial(Class.array)

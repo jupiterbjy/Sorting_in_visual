@@ -139,6 +139,29 @@ def Cocktail_shaker_opt1(array):
     return array
 
 
+def OddEven(array):
+    swapped = True
+    n = len(array)
+    
+    while swapped:
+        swapped = False
+        
+        for idx in range(0, n-1, 2):
+            
+            if array[idx] > array[idx+1]:
+                swapped = True
+                Swap(array, idx, idx+1)
+                
+        for idx in range(1, n-1, 2):
+            
+            if array[idx] > array[idx+1]:
+                swapped = True
+                Swap(array, idx, idx+1)
+                
+    return array
+
+
+
 def Selection(array):
     length = len(array)
     
@@ -236,6 +259,32 @@ def Merge(array):
     
     Sub_merge(array, L, R)
     
+    return array
+    
+
+def Quick(array):
+    n = len(array)
+    
+    def Sub_Quick(left, right):
+        if left < right:
+            p = Partition(left, right)
+            Sub_Quick(left, p-1)
+            Sub_Quick(p+1, right)
+                    
+                
+    def Partition(left, right):
+        mid = (right - left) // 2
+        pivot = array[mid]
+        
+        j = left
+        for i in range(left, right):
+            if array[i] < pivot:
+                Swap(array, i, j)
+                j += 1
+        Swap(array, j, mid)
+        return j
+    
+    Sub_Quick(0, n-1)
     return array
     
     
