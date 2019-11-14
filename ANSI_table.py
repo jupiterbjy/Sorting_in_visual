@@ -1,11 +1,10 @@
 import member_loader
 
 
-def Check_Bash():
+def Check_CMD():
     from psutil import Process
     import os
-    
-    if Process(os.getpid()).parent().name() == 'bash':
+    if 'exe' in Process(os.getpid()).parent().name():
         return True
     else:
         return False
@@ -16,16 +15,16 @@ def Clear_Screen(Run = []):
     import os
     
     if not Run:
-        Run.append(Check_Bash())
+        Run.append(Check_CMD())
     
     if Run[0]:
-        os.system('clear')
-    else:
         os.system('cls')
+    else:
+        os.system('clear')
 
     
 def Check_ANSI(output = True):
-    if not Check_Bash():
+    if Check_CMD():
         
         if output:
             print("ANSI incompetible, Importing Colorama.init")
