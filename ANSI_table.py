@@ -62,15 +62,16 @@ class ANSI_C():
         "HEADER" : '\033[95m',
         "UNDERLINE" : '\033[4m',
     }
-    
+
+
 def C_list(idx):
     return ANSI_C.table[list(ANSI_C.table.keys())[idx]]
-    
+
+
 def Colorize(txt, color):
     s = str(txt)
     return ANSI_C.table[color] + s + ANSI_C.table["END"]
-        
-    
-    
+
+
 __all__ = member_loader.ListFunction(__name__, name_only = True)
 __all__.append('ANSI_C')

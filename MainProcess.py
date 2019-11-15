@@ -10,13 +10,13 @@ from Output_Type import *
 def Visualizing(Class, mode = 0):
     
     '''
-    Visualizer for Sorting actions, currently only outputs in vertical way.
+    Visualizer for Sorting actions, currently only outputs in vertical way.\
     '''
     
     start_time = time()
     frame = 0
     
-    while True:        #runs until sort process finishes
+    while True:        # runs until sort process finishes
         
         print("_" * Class.length, sep='')
 
@@ -35,8 +35,7 @@ def Visualizing(Class, mode = 0):
 
         print("_" * Class.length, sep='')
         print('\n'.join(out))
-        
-        
+
         frame += 1
 
         sleep(Class.delay)
@@ -75,21 +74,24 @@ def Get_testcase():
     
     try:
         i_count = int(input("Type Number of items to sort: "))
+
     except:
         i_count = 0
     
     try:
         delay = int(input("Type delay in milisecond(s): "))/1000
+
     except:
         delay = 0
         
     try:
         global mode
         mode = int(input("Type output method (0/1/2) : "))
+
     except:
         mode = 0
     
-    return (i_count if i_count > 0 else 20, delay if delay > 0 else 0.05)
+    return i_count if i_count > 0 else 20, delay if delay > 0 else 0.05
     
     
 if __name__ == '__main__':
@@ -98,12 +100,11 @@ if __name__ == '__main__':
     Check_ANSI()
     sleep(0.2)
     
-    test_case = Source_array.Source(*Get_testcase())  #  * as unpacker!
+    test_case = Source_array.Source(*Get_testcase())        # * as unpacker!
     
-    sorter = th.Thread(target = getattr(Sort_al, Al_loader()), args = (test_case,))
-    visual = th.Thread(target = Visualizing, args = (test_case, mode))
-    
-    
+    sorter = th.Thread(target=getattr(Sort_al, Al_loader()), args = (test_case,))
+    visual = th.Thread(target=Visualizing, args=(test_case, mode))
+
     sorter.start()
     visual.start()
     
