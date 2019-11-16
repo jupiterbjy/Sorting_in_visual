@@ -46,13 +46,13 @@ class Sort():
         self.event = g_var.ev
     
     
-    def lo_list(self):
-        self.event.wait()
-        self.event.clear()
-        g_var.Color_reset()
+    def lo_list(self, idx):
+        #self.event.wait()
+        #self.event.clear()
+        #g_var.Color_reset()
         
         g_var.access += 1
-        return self.array
+        return self.array[idx]
     
     
     def lo_compare(self, idx1, idx2, equal = False):
@@ -363,5 +363,50 @@ class Merge(Sort):
         End()
     
             
+class Quick(Sort):
+    def __init__(self, Class):
+        super().__init__(Class)
+    
+        def Sub_Quick(left, right):
+
+            if left < right:
+
+                pivot_new = Partition(left, right)
+
+                Sub_Quick(left, pivot_new)
+                Add_Sorted_Area(left, pivot_new)
+                
+                Sub_Quick(pivot_new + 1, right)
+                Add_Sorted_Area(pivot_new + 1, right)
+                
+
+
+        def Partition(left, right):
+
+            mid = (right + left)//2
+
+            if self.lo_compare(left, mid):
+                self.lo_swap(mid, left)
+
+            if self.lo_compare(left, right):
+                self.lo_swap(right, left)
+
+            pivot = self.array[mid]
+
+            while True:
+                while self.lo_list(left) < pivot:
+                    left += 1
+
+                while self.lo_list(right) > pivot:
+                    right -= 1
+
+                if left >= right:
+                    return right
+                self.lo_swap(right, left)
+
+        Sub_Quick(0, self.length-1)
+        
+        End()
+        
         
 __all__ = member_loader.ListClass(__name__, name_only = True, blacklist = ['Sort'])

@@ -40,7 +40,7 @@ def Zipped(array):
                 out2.append(' ')
 
             else:
-                out2.append('█')
+                out2.append(' ')
 
             out2.append(ANSI_C.END)
 
@@ -49,7 +49,5 @@ def Zipped(array):
     for i in lines[::-1]:
         print(i)
         
-        
-        
-        
+
 __all__ = member_loader.ListFunction(__name__, name_only = True)

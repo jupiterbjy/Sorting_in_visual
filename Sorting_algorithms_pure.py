@@ -263,30 +263,46 @@ def Merge(array):
     
 
 def Quick(array):
+    # TODO: understand this mother hubberd
     n = len(array)
     
     def Sub_Quick(left, right):
+        
         if left < right:
-            p = Partition(left, right)
-            Sub_Quick(left, p-1)
-            Sub_Quick(p+1, right)
+            
+            pivot_new = Partition(left, right)
+            
+            Sub_Quick(left, pivot_new)
+            Sub_Quick(pivot_new + 1, right)
                     
                 
     def Partition(left, right):
-        mid = (right - left) // 2
+        
+        mid = (right + left)//2
+        
+        if array[mid] < array[left]:
+            Swap(array, mid, left)
+            
+        if array[right] < array[left]:
+            Swap(array, right, left)
+        
         pivot = array[mid]
         
-        j = left
-        for i in range(left, right):
-            if array[i] < pivot:
-                Swap(array, i, j)
-                j += 1
-        Swap(array, j, mid)
-        return j
-    
+        while True:
+            while array[left] < pivot:
+                left += 1
+                    
+            while array[right] > pivot:
+                right -= 1
+            
+            if left >= right:
+                return right
+            Swap(array, right, left)
+            
     Sub_Quick(0, n-1)
     return array
     
-    
+
+# p.s. To hyowon: Is this a bit too-lazy method for fillin' __all__?
 excepts = ['Swap', 'Status']
 __all__ = member_loader.ListFunction(__name__, name_only = True, blacklist = excepts)

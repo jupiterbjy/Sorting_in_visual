@@ -47,7 +47,7 @@ def Visualizing(Class, mode = 0):
             
             break
     
-    print("Sort complete")
+    print("Script Ended.")
         
     
 def Al_loader():
@@ -65,18 +65,46 @@ def Al_loader():
 
         except Exception as ex:
             print(ex, "/ Try again.")
+            
+
+def Sort_Wrapper(test_class, func):
+    # Debugging function
+    try:
+        func(test_class)
+        
+    except Exception as ex:
+        
+        g_var.s_alive = False
+        sleep(2)
+        print(ex)
+    
+        
 
     
 def Get_testcase():
     print('[ Type 0 or string to use default value ]')
     print('[ Too low delay is not recommended.     ]', end = '\n\n')
     # Bad usage of try-except? idk, no time to think of this now.
+    # TODO: add output method description
     
+    try:
+        global mode
+        mode = int(input("Type output method (0/1) : "))
+
+    except:
+        mode = 0
+
     try:
         i_count = int(input("Type Number of items to sort: "))
 
     except:
-        i_count = 0
+        if mode == 0:
+            i_count = 25
+        elif mode == 1:
+            i_count = 60
+        else:
+            # placeholder for other output method
+            i_count = 10
     
     try:
         delay = int(input("Type delay in milisecond(s): "))/1000
@@ -84,14 +112,9 @@ def Get_testcase():
     except:
         delay = 0
         
-    try:
-        global mode
-        mode = int(input("Type output method (0/1/2) : "))
-
-    except:
-        mode = 0
     
-    return i_count if i_count > 0 else 20, delay if delay > 0 else 0.05
+    
+    return i_count, delay if delay > 0 else 0.05
     
     
 if __name__ == '__main__':
@@ -101,8 +124,9 @@ if __name__ == '__main__':
     sleep(0.2)
     
     test_case = Source_array.Source(*Get_testcase())        # * as unpacker!
+    test_func = getattr(Sort_al, Al_loader())
     
-    sorter = th.Thread(target=getattr(Sort_al, Al_loader()), args = (test_case,))
+    sorter = th.Thread(target=Sort_Wrapper, args = (test_case, test_func))
     visual = th.Thread(target=Visualizing, args=(test_case, mode))
 
     sorter.start()
