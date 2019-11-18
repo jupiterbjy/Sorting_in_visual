@@ -303,6 +303,7 @@ def Quick(array):
     return array
     
 
+# Can't fix fucxing noVNC to run on reverse proxy, fucx fucx fucx!!!!!
 # p.s. To hyowon: Is this a bit too-lazy method for fillin' __all__?
 excepts = ['Swap', 'Status']
 __all__ = member_loader.ListFunction(__name__, name_only = True, blacklist = excepts)
