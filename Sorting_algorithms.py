@@ -55,6 +55,11 @@ class Sort():
         return self.array[idx]
     
     
+    def lo_assign(self, idx, value):
+        g_var.access += 1
+        self.array[idx] = value
+    
+    
     def lo_compare(self, idx1, idx2, equal = False):
         self.event.wait()
         self.event.clear()
@@ -346,7 +351,7 @@ class Merge(Sort):
 
             for idx in range(right, left-1, -1):
                 #Status(vars(), ['time'])
-                self.lo_list()[idx] = Sorted.pop()
+                self.lo_assign(idx, Sorted.pop())
                 Add_Sorted_Area(idx)
             
             

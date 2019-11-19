@@ -222,7 +222,6 @@ def Heap(array):
 def Merge(array):
     L, R = 0, len(array)-1
     
-    # TODO: flip this over
     def List_Merge(array, left, right, mid):
         Sorted = []
         l, r, m = left, right, mid+1
@@ -303,7 +302,7 @@ def Quick(array):
     return array
     
 
-# Can't fix fucxing noVNC to run on reverse proxy, fucx fucx fucx!!!!!
+# Can't fix fucxing noVNC to run on reverse proxy
 # p.s. To hyowon: Is this a bit too-lazy method for fillin' __all__?
 excepts = ['Swap', 'Status']
 __all__ = member_loader.ListFunction(__name__, name_only = True, blacklist = excepts)

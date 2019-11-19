@@ -1,4 +1,4 @@
-from ANSI_table import *
+from ANSI_table import ANSI_C
 import member_loader
 import g_var
 
@@ -50,4 +50,4 @@ def Zipped(array):
         print(i)
         
 
-__all__ = member_loader.ListFunction(__name__, name_only = True)
+__all__ = member_loader.ListFunction(__name__, name_only = True, blacklist = ['Color_matcher'])
