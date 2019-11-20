@@ -300,9 +300,72 @@ def Quick(array):
             
     Sub_Quick(0, n-1)
     return array
+
+
+def Counting(array):
+    n = len(array)
+    m = max(array)
+    
+    counts = [0 for i in range(m + 1)]
+    results = [0 for i in range(n)]
+    
+    for i in array:
+        counts[i] += 1
+    
+    for i in range(m):
+        counts[i + 1] += counts[i]
+    
+    for i in array:
+        results[counts[i] - 1] = i
+        counts[i] -= 1
+    
+    return results
+        
+
+def Radix_LSD_Base2(array):
+    
+    def count_bits(n):
+        if(n == 0):
+            return 0
+        else:
+            return (n & 1) + count_bits(n >> 1)
+    
+    
+    def counting_sort_bitwise(array, length, pos):
+
+        counts = [0, 0]
+        results = [0 for i in range(length)]
+
+        for i in array:
+            counts[i<<pos & 1] += 1
+
+        counts[1] += counts[0]
+
+        for i in array:
+            results[counts[i<<pos & 1] - 1] = i
+            counts[i<<pos & 1] -= 1
+        
+        print('\n\n', pos)
+        for i in array:
+            print(bin(i) + '  ')
+        
+        return results
+    
+    length = len(array)
+    digit = count_bits(max(array))
+    print(digit, 'aaa')
+    
+    for i in range(digit):
+        array = counting_sort_bitwise(array, length, i)
+    
+    return array
+        
+    
+    
+# TODO: add Radix sort
     
 
-# Can't fix fucxing noVNC to run on reverse proxy
+# Can't fix fucxing noVNC to run on reverse proxy - for a week.
 # p.s. To hyowon: Is this a bit too-lazy method for fillin' __all__?
 excepts = ['Swap', 'Status']
 __all__ = member_loader.ListFunction(__name__, name_only = True, blacklist = excepts)

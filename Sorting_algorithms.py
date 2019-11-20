@@ -366,7 +366,7 @@ class Merge(Sort):
     
         Sub_merge(L, R)
         End()
-    
+        
             
 class Quick(Sort):
     def __init__(self, Class):
