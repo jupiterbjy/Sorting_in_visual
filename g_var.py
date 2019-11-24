@@ -16,9 +16,10 @@ sorted_area = []
 
 markers = [swap_target, comp_target, sorted_area]
 
-def Color_reset(ALL = False):
+
+def Color_reset(ALL=False):
     index = 0
-    
+
     if ALL:
         for i in markers:
             i.clear()

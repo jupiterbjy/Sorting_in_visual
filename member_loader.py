@@ -14,6 +14,7 @@ Blacklist only supported for array return, I have no time.
 '''
 # TODO: add dict key remove for blacklist
 
+
 def ListTarget(name, target, name_only, blacklist):
     members = inspect.getmembers(modules[name], target)
     if name_only:
@@ -21,16 +22,17 @@ def ListTarget(name, target, name_only, blacklist):
         for i in results:
             if i in blacklist:
                 results.remove(i)
-                
+
         blacklist = []
         return results
-    
+
     else:
         return members
-    
-    
-def ListClass(name, name_only = False, blacklist = []):
+
+
+def ListClass(name, name_only=False, blacklist=[]):
     return ListTarget(name, inspect.isclass, name_only, blacklist)
-    
-def ListFunction(name, name_only = False, blacklist = []):
+
+
+def ListFunction(name, name_only=False, blacklist=[]):
     return ListTarget(name, inspect.isfunction, name_only, blacklist)

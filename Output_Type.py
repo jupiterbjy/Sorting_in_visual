@@ -20,14 +20,14 @@ def Color_matcher(index):
 
 
 def Vertcial(array):
-        for idx, i in enumerate(array):
-            print(Color_matcher(idx), end='', sep='')
-            print("█" * i + ANSI_C.END, sep='')
-    
-    
+    for idx, i in enumerate(array):
+        print(Color_matcher(idx), end='', sep='')
+        print("█" * i + ANSI_C.END, sep='')
+
+
 def Zipped(array):
     lines = []
-    for step in range(int(len(array)/10)):
+    for step in range(int(len(array) / 10)):
         out2 = []
 
         for idx, i in enumerate(array):
@@ -48,6 +48,7 @@ def Zipped(array):
 
     for i in lines[::-1]:
         print(i)
-        
 
-__all__ = member_loader.ListFunction(__name__, name_only = True, blacklist = ['Color_matcher'])
+
+__all__ = member_loader.ListFunction(
+    __name__, name_only=True, blacklist=['Color_matcher'])

@@ -1,7 +1,7 @@
 <Note for self>
 
+
 > Check out this on day-off:
-    < patra asmr >
 
     < Bannana Pi >
         https://www.notebookcheck.net/Banana-Pi-BPI-M4-a-Raspberry-Pi-clone-that-packs-a-more-powerful-SoC-and-costs-just-US-35.423926.0.html
@@ -14,13 +14,26 @@
     
     
 > Check out this on codes
+
     < Class Method vs instance method >
+    
+    
+    < __metaclass__ >
+    
+    So, is this needed? StackOverFlow Says 99% of users don't need this.
+    This guy says 'create interface first with __metaclass__ but it's also waste of
+    code length.
+    
+    https://weejw.tistory.com/108
+    
     
     < Apply this to win10 CMD >
         https://stackoverflow.com/questions/287871/how-to-print-colored-text-in-terminal-in-python
     
+    
     < Remember this for Pi Owncloud >
     https://linuxhint.com/install_owncloud_raspberry_pi/
+
 
     < update for current Pi auto ip mailer >
         https://unix.stackexchange.com/questions/22615/how-can-i-get-my-external-ip-address-in-a-shell-script
@@ -29,3 +42,4 @@
 
     < Just some helpful notes about python >
         https://realpython.com/pointers-in-python/
+        
