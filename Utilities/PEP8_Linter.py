@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+import threading
 import os
 
 # Now I'm making my own linter, wonderful, just wonderful, goorm.
@@ -37,20 +38,37 @@ class FileChangeHandler(FileSystemEventHandler):
             print(f'!! Path: {event.src_path}')
 
 
+            
 class PEP8_Handler(FileChangeHandler):
+    
     def __init__(self):
-        super().__init__()
-        
-        if self.event_quene:
-            event_type, source = self.event_quene.pop()
+        global out
+        self.event_quene = []
+        self.last_modified = datetime.now()
 
-            if str(event_type) == 'modified':
-                print(source)
+    def on_modified(self, event):
+        if datetime.now() - self.last_modified < timedelta(seconds=1):
+            return
+        else:
+            self.last_modified = datetime.now()
+            
+        if out:
+
+            print(f'!! Type: {event.event_type} At {datetime.now()}')
+            print(f'!! Path: {event.src_path}')
+
+        if not event.is_directory:
+            
+            
+            self.tmp = (event.event_type, event.src_path)
+            
+            if self.tmp[0] == 'modified':
+                print(self.tmp[1])
                 
-                source_array = source.split('//')
+                source_array = self.tmp[1].split('//')
 
                 if '.py' in source_array[-1]:
-                    os.system('PEP8 ' + source)
+                    os.system('PEP8 ' + self.tmp[1])
                     _ = input("Press Enter to skip")
                     os.system('clear')
 
@@ -64,6 +82,7 @@ if __name__ == '__main__':
         out = True
     else:
         out = False
+    
     
     
     event_handler = PEP8_Handler()
