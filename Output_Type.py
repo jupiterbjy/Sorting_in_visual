@@ -4,8 +4,16 @@ import g_var
 
 
 def Color_matcher(index):
+    # colors = [ANSI_C.YEL, ANSI_C.PUR, ANSI_C.RED, ANSI_C.END]
+    
+    # for target in g_var.markers, color in colors:
+    # use zip next time
+    
     if index in g_var.comp_target:
         color = ANSI_C.YEL
+        
+    elif index in g_var.acce_target:
+        color = ANSI_C.BLU
 
     elif index in g_var.swap_target:
         color = ANSI_C.PUR
@@ -25,7 +33,7 @@ def Vertcial(array):
         print("█" * i + ANSI_C.END, sep='')
 
 
-def Zipped(array):
+def Zipped_main(array, digit=' '):
     lines = []
     for step in range(int(len(array) / 10)):
         out2 = []
@@ -40,7 +48,7 @@ def Zipped(array):
                 out2.append(' ')
 
             else:
-                out2.append(' ')
+                out2.append(digit)
 
             out2.append(ANSI_C.END)
 
@@ -50,5 +58,13 @@ def Zipped(array):
         print(i)
 
 
+def Zipped(array):
+    Zipped_main(array)
+
+
+def Zipped_Filled(array):
+    Zipped_main(array, '^')
+
+
 __all__ = member_loader.ListFunction(
-    __name__, name_only=True, blacklist=['Color_matcher'])
+    __name__, name_only=True, blacklist=['Color_matcher', 'Zipped_main'])

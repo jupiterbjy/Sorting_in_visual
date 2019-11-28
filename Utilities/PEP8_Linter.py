@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-import threading
 import os
 
 # Now I'm making my own linter, wonderful, just wonderful, goorm.
@@ -14,6 +13,7 @@ import os
 # TODO: in-depth understanding of how this works.
 # TODO: add autopep8 with some function call, no concrete plan yet.
 # autopep8 --in-place --aggressive --aggressive .py
+
 
 class FileChangeHandler(FileSystemEventHandler):
     def __init__(self):
@@ -30,17 +30,15 @@ class FileChangeHandler(FileSystemEventHandler):
         if not event.is_directory:
             self.event_quene.append((event.event_type, event.src_path))
             print(self.event_quene)
-            
-            
+
         if out:
 
             print(f'!! Type: {event.event_type} At {datetime.now()}')
             print(f'!! Path: {event.src_path}')
 
 
-            
 class PEP8_Handler(FileChangeHandler):
-    
+
     def __init__(self):
         global out
         self.event_quene = []
@@ -51,20 +49,19 @@ class PEP8_Handler(FileChangeHandler):
             return
         else:
             self.last_modified = datetime.now()
-            
+
         if out:
 
             print(f'!! Type: {event.event_type} At {datetime.now()}')
             print(f'!! Path: {event.src_path}')
 
         if not event.is_directory:
-            
-            
+
             self.tmp = (event.event_type, event.src_path)
-            
+
             if self.tmp[0] == 'modified':
                 print(self.tmp[1])
-                
+
                 source_array = self.tmp[1].split('//')
 
                 if '.py' in source_array[-1]:
@@ -76,15 +73,13 @@ class PEP8_Handler(FileChangeHandler):
 if __name__ == '__main__':
     global out
     print('< PEP8 auto linter >')
-    
+
     option = input('Do you want to show Filechange logs? (y/n):')
     if option == 'y':
         out = True
     else:
         out = False
-    
-    
-    
+
     event_handler = PEP8_Handler()
     observer = Observer()
     observer.schedule(event_handler, path='../', recursive=True)

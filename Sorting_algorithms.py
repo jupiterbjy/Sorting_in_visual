@@ -45,13 +45,16 @@ class Sort():
         self.length = len(Class.array)
         self.event = g_var.ev
 
-    def lo_list(self, idx):
-        # self.event.wait()
-        # self.event.clear()
-        # g_var.Color_reset()
+    def lo_list(self, idx, array=False, delay=False, marker=False):
+        if delay:
+            self.event.wait()
+            self.event.clear()
+            if marker:
+                g_var.Color_reset()
+                g_var.acce_target.append(idx)
 
         g_var.access += 1
-        return self.array[idx]
+        return self.array[idx] if array is False else array[idx]
 
     def lo_assign(self, idx, value):
         g_var.access += 1
@@ -197,7 +200,6 @@ class Cocktail_shaker_opt1(Sort):
 
         start = 0
         end = self.length - 1
-        import time
 
         while start <= end:
             new_end = start
@@ -345,7 +347,7 @@ class Merge(Sort):
                     Sorted.append(self.array[idx])
 
             for idx in range(right, left - 1, -1):
-                #Status(vars(), ['time'])
+                # Status(vars(), ['time'])
                 self.lo_assign(idx, Sorted.pop())
                 Add_Sorted_Area(idx)
 
@@ -414,7 +416,6 @@ class Counting(Sort):
         tmp = self.array[::]
 
         counts = [0 for i in range(m + 1)]
-        results = [0 for i in range(self.length)]
 
         for i in tmp:
             counts[i] += 1
@@ -435,8 +436,7 @@ class Counting(Sort):
 class Radix_LSD_Base2(Sort):
     def __init__(self, Class):
         super().__init__(Class)
-
-        # def lo_generate_seq(self, reverse=False):
+        temp = self.array[::]
 
         def count_bits(n):
             if(n == 0):
@@ -449,26 +449,31 @@ class Radix_LSD_Base2(Sort):
             counts = [0, 0]
             results = [0 for i in range(self.length)]
 
-            for i in self.array:
+            for idx in range(self.length):
+                i = self.lo_list(idx, delay=True, marker=True)
                 counts[i >> pos & 1] += 1
 
             counts[1] += counts[0]
 
-            # Don't [::-1] waste Memory of another array size?
-            for i in self.array[::-1]:
+            # TODO: fix issue
+            
+            for idx in range(self.length - 1, -1, -1):
+                i = self.lo_list(idx, array=temp, delay=True, marker=False)
 
                 results[counts[i >> pos & 1] - 1] = i
+                self.array[counts[i >> pos & 1] - 1] = i
                 counts[i >> pos & 1] -= 1
-
-            return results
+            
 
         # TODO: visualize this baby with getting max, or somethin' idk
 
         digit = count_bits(max(self.array))
 
         for i in range(digit):
-            
-            self.array = counting_sort_bitwise(i)
+
+            counting_sort_bitwise(i)
+
+        Add_Sorted_Area(0, self.length - 1)
 
         End()
 
