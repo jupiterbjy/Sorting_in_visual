@@ -66,5 +66,5 @@ def Zipped_Filled(array):
     Zipped_main(array, '^')
 
 
-__all__ = member_loader.ListFunction(
-    __name__, name_only=True, blacklist=['Color_matcher', 'Zipped_main'])
+__all__ = member_loader.ListFunction(__name__, name_only=True, \
+                                     blacklist=['Color_matcher', 'Zipped_main'])

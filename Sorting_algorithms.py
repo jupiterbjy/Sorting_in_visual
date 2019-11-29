@@ -56,9 +56,14 @@ class Sort():
         g_var.access += 1
         return self.array[idx] if array is False else array[idx]
 
-    def lo_assign(self, idx, value):
+    def lo_assign(self, idx, value, marker=False):
         g_var.access += 1
         self.array[idx] = value
+        if marker:
+            self.event.wait()
+            self.event.clear()
+            g_var.Color_reset()
+            g_var.acce_target.append(idx)
 
     def lo_compare(self, idx1, idx2, equal=False):
         self.event.wait()
@@ -328,7 +333,7 @@ class Merge(Sort):
 
         def List_Merge(left, right, mid):
             Sorted = []
-            l, r, m = left, right, mid + 1
+            l, m = left, mid + 1
 
             while(l <= mid and m <= right):
 
@@ -417,14 +422,15 @@ class Counting(Sort):
 
         counts = [0 for i in range(m + 1)]
 
-        for i in tmp:
-            counts[i] += 1
+        for idx in range(self.length):
+            counts[self.lo_list(idx, delay=True, marker=True)] += 1
 
         for i in range(m):
             counts[i + 1] += counts[i]
 
         for i in tmp:
-            self.array[counts[i] - 1] = i
+            Add_Sorted_Area(i-1)
+            self.lo_assign(counts[i] - 1, i, marker=True)
             counts[i] -= 1
 
         # for idx, i in enumerate(self.array):
@@ -436,7 +442,6 @@ class Counting(Sort):
 class Radix_LSD_Base2(Sort):
     def __init__(self, Class):
         super().__init__(Class)
-        temp = self.array[::]
 
         def count_bits(n):
             if(n == 0):
@@ -447,7 +452,6 @@ class Radix_LSD_Base2(Sort):
         def counting_sort_bitwise(pos):
 
             counts = [0, 0]
-            results = [0 for i in range(self.length)]
 
             for idx in range(self.length):
                 i = self.lo_list(idx, delay=True, marker=True)
@@ -455,22 +459,62 @@ class Radix_LSD_Base2(Sort):
 
             counts[1] += counts[0]
 
-            # TODO: fix issue
-            
+            temp = self.array[::]
+            # TODO: Find other way than copying entire array for display
+
             for idx in range(self.length - 1, -1, -1):
-                i = self.lo_list(idx, array=temp, delay=True, marker=False)
+                i = self.lo_list(idx, array=temp, delay=True)
 
-                results[counts[i >> pos & 1] - 1] = i
-                self.array[counts[i >> pos & 1] - 1] = i
+                self.lo_assign(counts[i >> pos & 1] - 1, i, marker=True)
+
                 counts[i >> pos & 1] -= 1
-            
-
-        # TODO: visualize this baby with getting max, or somethin' idk
 
         digit = count_bits(max(self.array))
 
         for i in range(digit):
+            counting_sort_bitwise(i)
 
+        Add_Sorted_Area(0, self.length - 1)
+
+        End()
+
+
+class Radix_LSD_BaseN(Sort):
+    # TODO: complete this
+    def __init__(self, Class, Base=10):
+        super().__init__(Class)
+
+        def count_bits(n):
+            if(n == 0):
+                return 0
+            else:
+                return 1 + count_bits(n % Base)
+
+        def counting_sort_bitwise(pos):
+
+            temp = self.array[::]
+
+            counts = [0, 0]
+
+            for idx in range(self.length):
+                i = self.lo_list(idx, delay=True, marker=True)
+                counts[i >> pos & 1] += 1
+
+            counts[1] += counts[0]
+
+            temp = self.array[::]
+            # TODO: Find other way than copying entire array for display
+
+            for idx in range(self.length - 1, -1, -1):
+                i = self.lo_list(idx, array=temp, delay=True)
+
+                self.lo_assign(counts[i >> pos & 1] - 1, i, marker=True)
+
+                counts[i >> pos & 1] -= 1
+
+        digit = count_bits(max(self.array))
+
+        for i in range(digit):
             counting_sort_bitwise(i)
 
         Add_Sorted_Area(0, self.length - 1)
