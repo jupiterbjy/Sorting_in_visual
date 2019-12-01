@@ -464,10 +464,14 @@ class Radix_LSD_Base2(Sort):
 
             for idx in range(self.length - 1, -1, -1):
                 i = self.lo_list(idx, array=temp, delay=True)
+                i2 = i >> pos & 1
 
-                self.lo_assign(counts[i >> pos & 1] - 1, i, marker=True)
+                self.lo_assign(counts[i2] - 1, i, marker=True)
+                
+                if pos == digit - 1:
+                    Add_Sorted_Area(counts[i2] - 1)
 
-                counts[i >> pos & 1] -= 1
+                counts[i2] -= 1
 
         digit = count_bits(max(self.array))
 
@@ -507,10 +511,14 @@ class Radix_LSD_BaseN(Sort):
 
             for idx in range(self.length - 1, -1, -1):
                 i = self.lo_list(idx, array=temp, delay=True)
+                i2 = i >> pos & 1
 
-                self.lo_assign(counts[i >> pos & 1] - 1, i, marker=True)
-
-                counts[i >> pos & 1] -= 1
+                self.lo_assign(counts[i2] - 1, i, marker=True)
+                
+                Add_Sorted_Area(counts[i2] - 1)
+                
+                counts[i2] -= 1
+                
 
         digit = count_bits(max(self.array))
 
