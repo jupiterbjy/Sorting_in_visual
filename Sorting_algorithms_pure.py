@@ -331,12 +331,6 @@ def Radix_LSD_Base2(array):
         else:
             return 1 + count_bits(n >> 1)
 
-    # def Tester(info, arr):
-    #    print('\n')
-    #    for i2 in arr:
-    #        print(bin(i2)[2:].rjust(10), i2)
-    #    print('\n')
-
     def counting_sort_bitwise(array, length, pos):
 
         counts = [0, 0]
@@ -365,6 +359,46 @@ def Radix_LSD_Base2(array):
 
     return array
 
+
+def Radix_LSD_BaseN(array, Base=10):
+    
+    def count_digits(n):
+        if(n == 0):
+            return 0
+        else:
+            return 1 + count_bits(n//Base)
+
+    def counting_sort_bitwise(array, length, pos, Base=10):
+
+        counts = [0, 0]
+        results = [0 for i in range(length)]
+
+        for i in array:
+            counts[i//Base] += 1
+            
+        for idx in range(self.length):
+            
+            counts[idx + 1] += counts
+
+        counts[1] += counts[0]
+
+        # Don't [::-1] waste Memory of another array size?
+        for i in array[::-1]:
+
+            results[counts[i//Base] - 1] = i
+            counts[i//Base] -= 1
+
+        # Tester(vars(), results)
+
+        return results
+
+    length = len(array)
+    digit = count_digits(max(array))
+
+    for i in range(digit):
+        array = counting_sort_bitwise(array, length, i)
+
+    return array
 
 # Can't fix darn noVNC to run on reverse proxy - for a week.
 # p.s. To hyowon: Is this a bit too-lazy method for fillin' __all__?
