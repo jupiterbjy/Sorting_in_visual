@@ -1,7 +1,12 @@
 <Note for self>
 
+    Students who made first contact with programming language as BASIC
+    are doomed with permanent inability to learn a good coding style
+
 
 > Check out this on day-off:
+    < Owncloud filesize limit >
+    https://central.owncloud.org/t/change-upload-file-size/1165/6
 
     < Bannana Pi >
         https://www.notebookcheck.net/Banana-Pi-BPI-M4-a-Raspberry-Pi-clone-that-packs-a-more-powerful-SoC-and-costs-just-US-35.423926.0.html

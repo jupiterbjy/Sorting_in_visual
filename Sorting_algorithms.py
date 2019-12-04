@@ -492,7 +492,7 @@ class Radix_LSD_BaseN(Sort):
             if(n == 0):
                 return 0
             else:
-                return 1 + count_bits(n % Base)
+                return 1 + count_bits(n/Base)
 
         def counting_sort_bitwise(pos):
 
