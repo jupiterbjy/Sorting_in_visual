@@ -66,10 +66,9 @@ class PEP8_Handler(FileChangeHandler):
                 source_array = self.tmp[1].split('//')
 
                 if '.py' in source_array[-1]:
-                    os.system('PEP8 ' + self.tmp[1])
+                    os.system('pycodestyle --show-pep8 ' + self.tmp[1])
                     _ = input("Press Enter to skip")
-                    os.system('clear')
-
+                    #os.system('clear')
 
 if __name__ == '__main__':
     global out

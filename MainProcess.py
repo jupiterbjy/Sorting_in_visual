@@ -10,7 +10,7 @@ import Output_Type
 
 def Visualizing(Class, name, out_func):
     '''
-    Visualizer for Sorting actions, currently only outputs in vertical way.\
+    Visualizer for Sorting actions, currently only outputs in vertical way.
     '''
 
     start_time = time()
