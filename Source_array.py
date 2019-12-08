@@ -1,20 +1,31 @@
 import random
+import member_loader
 
 
 # Shuffling in Fisher-Yates way, with keyword arg.
-def Swap(a, b, c):
-    a[b], a[c] = a[c], a[b]
 
 
-def shuffle(array, length=-1):
-    if length < 0:
-        length = len(array)
+def shuffle(array):
+
+    def Swap(a, b, c):
+        a[b], a[c] = a[c], a[b]
+
+    length = len(array)
 
     for i in range(length):
         r = random.randint(0, length - i - 1)
         Swap(array, r, -1 - i)
 
     return array
+
+
+def generate(length=20, zero_offset=1):
+
+    return [i + zero_offset for i in range(length)]
+
+
+def shuffle_generate(length, offset=1):
+    return shuffle(generate(length, offset))
 
 
 # Class storing testcase - shuffled array with delay.
@@ -25,5 +36,8 @@ def shuffle(array, length=-1):
 class Source():
     def __init__(self, length=-1, delay=0.5):
         self.length = length
-        self.array = shuffle([i + 1 for i in range(length)], length)
+        self.array = shuffle(generate(length))
         self.delay = delay
+
+
+__all__ = member_loader.ListFunction(__name__)

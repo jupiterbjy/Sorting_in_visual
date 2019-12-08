@@ -2,7 +2,7 @@ import unittest
 from threading import Thread, Event
 
 import Sorting_algorithms_pure as SAP
-from Source_array import shuffle
+from Source_array import *
 
 
 def Loader(testcase, secondrun=[]):
@@ -31,12 +31,8 @@ def Better_output(run, ans):
 
 class TestBasicOutput(unittest.TestCase):
     def setUp(self):
-        global test, correct, test_10, correct_10
-
-        test = [20 - i for i in range(20)]
-        test_10 = [10 - i for i in range(10)]
-        correct = test[::-1]
-        correct_10 = test_10[::-1]
+        global results
+        results = []
 
     def tearDown(self):
         global results
@@ -50,28 +46,33 @@ class TestBasicOutput(unittest.TestCase):
         Better_output(test, correct)
         self.assertEqual(correct, Loader(test))
     '''
-    # a
-    # Goorm, FIX DARN LINT FUNCTION ALREADY!!!!!!!!!!!!!!
 
     def test_Random_20(self):
-        global test, correct
 
-        test = shuffle(test)
+        correct = generate(20)
+        test = shuffle_generate(20)
 
-        Better_output(test, correct)
         self.assertEqual(correct, Loader(test))
+        Better_output(test, correct)
 
     def test_Random_10(self):
-        global test_10, correct_10
 
-        test_10 = shuffle(test_10)
+        correct = generate(10)
+        test = shuffle_generate(10)
 
-        Better_output(test_10, correct_10)
-        self.assertEqual(correct_10, Loader(test_10))
+        self.assertEqual(correct, Loader(test))
+        Better_output(test, correct)
+
+    def test_Zero_10(self):
+
+        correct = generate(10, 0)
+        test = shuffle_generate(10, 0)
+
+        self.assertEqual(correct, Loader(test))
+        Better_output(test, correct)
 
 
 if __name__ == '__main__':
     unittest.main()
     global results
 
-    

@@ -13,7 +13,7 @@ import os
 # TODO: in-depth understanding of how this works.
 # TODO: add autopep8 with some function call, no concrete plan yet.
 # autopep8 --in-place --aggressive --aggressive .py
-
+# TODO: clean up PEP8 output way more.
 
 
 class FileChangeHandler(FileSystemEventHandler):
@@ -68,8 +68,9 @@ class PEP8_Handler(FileChangeHandler):
                 if '.py' in source_array[-1]:
                     os.system('pycodestyle --show-pep8 ' + self.tmp[1])
                     _ = input("Press Enter to skip")
-                    #os.system('clear')
+                    os.system('clear')
 
+                    
 if __name__ == '__main__':
     global out
     print('< PEP8 auto linter >')

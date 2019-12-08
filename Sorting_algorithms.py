@@ -452,15 +452,14 @@ class Radix_LSD_Base2(Sort):
         def counting_sort_bitwise(pos):
 
             counts = [0, 0]
+            temp = self.array[::]
+            # TODO: Find other way than copying entire array for display
 
             for idx in range(self.length):
                 i = self.lo_list(idx, delay=True, marker=True)
                 counts[i >> pos & 1] += 1
 
             counts[1] += counts[0]
-
-            temp = self.array[::]
-            # TODO: Find other way than copying entire array for display
 
             for idx in range(self.length - 1, -1, -1):
                 i = self.lo_list(idx, array=temp, delay=True)
@@ -488,46 +487,52 @@ class Radix_LSD_BaseN(Sort):
     def __init__(self, Class, Base=10):
         super().__init__(Class)
 
-        def count_bits(n):
+        def count_digits(n):
             if(n == 0):
                 return 0
             else:
-                return 1 + count_bits(n/Base)
+                return 1 + count_digits(n//Base)
 
-        def counting_sort_bitwise(pos):
+        def counting_sort_custom(pos):
 
+            def Base_out(i):
+                return (i // Base**pos) % Base
+
+            counts = [0 for i in range(Base)]
             temp = self.array[::]
 
-            counts = [0, 0]
-
-            for idx in range(self.length):
+            for idx in range(self.length - 1, -1, -1):
                 i = self.lo_list(idx, delay=True, marker=True)
-                counts[i >> pos & 1] += 1
+                counts[Base_out(i)] += 1
 
-            counts[1] += counts[0]
-
-            temp = self.array[::]
-            # TODO: Find other way than copying entire array for display
+            for idx in range(Base - 1):
+                counts[idx + 1] += counts[idx]
 
             for idx in range(self.length - 1, -1, -1):
                 i = self.lo_list(idx, array=temp, delay=True)
-                i2 = i >> pos & 1
+                i2 = Base_out(i)
 
                 self.lo_assign(counts[i2] - 1, i, marker=True)
-                
-                Add_Sorted_Area(counts[i2] - 1)
-                
-                counts[i2] -= 1
-                
 
-        digit = count_bits(max(self.array))
+                if pos == digit - 1:
+                    Add_Sorted_Area(counts[i2] - 1)
+
+                counts[Base_out(i)] -= 1
+
+        digit = count_digits(max(self.array))
 
         for i in range(digit):
-            counting_sort_bitwise(i)
-
-        Add_Sorted_Area(0, self.length - 1)
+            counting_sort_custom(i)
 
         End()
 
+def Radix_LSD_Base10(array):
+    return Radix_LSD_BaseN(array)
 
-__all__ = member_loader.ListClass(__name__, name_only=True, blacklist=['Sort'])
+
+def Radix_LSD_Base4(array):
+    return Radix_LSD_BaseN(array, 4)
+# TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
+
+
+__all__ = member_loader.ListClass(__name__, blacklist=['Sort'])

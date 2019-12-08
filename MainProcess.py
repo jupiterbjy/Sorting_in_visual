@@ -103,12 +103,14 @@ def Get_testcase():
     return i_count, delay if delay > 0 else 0.05
 
 
+
 if __name__ == '__main__':
     # TODO: add stack to store list of sorts to run in seq.
 
     print('[ Type nothing to use default value.    ]')
     print('[ Too low delay is not recommended.     ]', end='\n\n')
 
+    
     Check_ANSI()
     sleep(0.2)
 

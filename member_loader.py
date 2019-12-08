@@ -30,9 +30,9 @@ def ListTarget(name, target, name_only, blacklist):
         return members
 
 
-def ListClass(name, name_only=False, blacklist=[]):
+def ListClass(name, name_only=True, blacklist=[]):
     return ListTarget(name, inspect.isclass, name_only, blacklist)
 
 
-def ListFunction(name, name_only=False, blacklist=[]):
+def ListFunction(name, name_only=True, blacklist=[]):
     return ListTarget(name, inspect.isfunction, name_only, blacklist)

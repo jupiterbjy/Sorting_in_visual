@@ -361,35 +361,32 @@ def Radix_LSD_Base2(array):
 
 
 def Radix_LSD_BaseN(array, Base=10):
-    
+
     def count_digits(n):
         if(n == 0):
             return 0
         else:
             return 1 + count_digits(n//Base)
 
-    def counting_sort_bitwise(array, length, pos, Base=10):
+    def counting_sort_custom(array, length, pos, Base=10):
 
-        counts = [0 for i in range(length)]
+        def Base_out(i):
+            return (i // Base**pos) % Base
+
+        counts = [0 for i in range(Base)]
         results = [0 for i in range(length)]
 
         for i in array:
-            print(i, i // (Base**pos))
-            counts[i // (Base**pos) - 1] += 1
-            
-        for idx in range(length - 1):
-            
+            counts[Base_out(i)] += 1
+
+        for idx in range(Base - 1):
             counts[idx + 1] += counts[idx]
 
-        counts[1] += counts[0]
-
-        # Don't [::-1] waste Memory of another array size?
+        # Don't slicing waste Memory of another array size?
         for i in array[::-1]:
 
-            results[counts[i // (Base**pos) - 1] - 1] = i
-            counts[i // (Base**pos) - 1] -= 1
-
-        Status(vars())
+            results[counts[Base_out(i)] - 1] = i
+            counts[Base_out(i)] -= 1
 
         return results
 
@@ -397,12 +394,20 @@ def Radix_LSD_BaseN(array, Base=10):
     digit = count_digits(max(array))
 
     for i in range(digit):
-        array = counting_sort_bitwise(array, length, i)
+        array = counting_sort_custom(array, length, i, Base)
 
     return array
 
-# Can't fix darn noVNC to run on reverse proxy - for a week.
-# p.s. To hyowon: Is this a bit too-lazy method for fillin' __all__?
-excepts = ['Swap', 'Status']
-__all__ = member_loader.ListFunction(
-    __name__, name_only=True, blacklist=excepts)
+
+def Radix_LSD_Base10(array):
+    return Radix_LSD_BaseN(array)
+
+
+def Radix_LSD_Base4(array):
+    return Radix_LSD_BaseN(array, 4)
+# TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
+
+
+# Is this a bit too-lazy method for fillin' __all__?
+excepts = ['Swap', 'Status', 'Radix_LSD_BaseN']
+__all__ = member_loader.ListFunction(__name__, blacklist=excepts)
