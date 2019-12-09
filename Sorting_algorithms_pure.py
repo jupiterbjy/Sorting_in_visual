@@ -139,7 +139,7 @@ def Cocktail_shaker_opt1(array):
 
         start = new_start
 
-        #Status(vars(), ['time'])
+        # Status(vars(), ['time'])
 
     return array
 
@@ -247,7 +247,7 @@ def Merge(array):
                 Sorted.append(array[idx])
 
         for idx in range(right, left - 1, -1):
-            #Status(vars(), ['time'])
+            # Status(vars(), ['time'])
             array[idx] = Sorted.pop()
 
     def Sub_merge(array, left, right):
@@ -366,7 +366,7 @@ def Radix_LSD_BaseN(array, Base=10):
         if(n == 0):
             return 0
         else:
-            return 1 + count_digits(n//Base)
+            return 1 + count_digits(n // Base)
 
     def counting_sort_custom(array, length, pos, Base=10):
 
@@ -405,6 +405,7 @@ def Radix_LSD_Base10(array):
 
 def Radix_LSD_Base4(array):
     return Radix_LSD_BaseN(array, 4)
+
 # TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
 
 

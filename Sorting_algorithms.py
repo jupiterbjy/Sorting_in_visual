@@ -335,7 +335,7 @@ class Merge(Sort):
             Sorted = []
             l, m = left, mid + 1
 
-            while(l <= mid and m <= right):
+            while(Left <= mid and m <= right):
 
                 if self.lo_compare(m, l, equal=True):
                     Sorted.append(self.array[l])
@@ -481,9 +481,10 @@ class Radix_LSD_Base2(Sort):
 
         End()
 
+# TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
+
 
 class Radix_LSD_BaseN(Sort):
-    # TODO: complete this
     def __init__(self, Class, Base=10):
         super().__init__(Class)
 
@@ -492,6 +493,7 @@ class Radix_LSD_BaseN(Sort):
                 return 0
             else:
                 return 1 + count_digits(n//Base)
+            # Pretty sure dividing aren't good way.
 
         def counting_sort_custom(pos):
 
@@ -526,13 +528,16 @@ class Radix_LSD_BaseN(Sort):
 
         End()
 
-def Radix_LSD_Base10(array):
-    return Radix_LSD_BaseN(array)
+
+class Radix_LSD_Base10(Radix_LSD_BaseN):
+    def __init__(self, Testcase_Class):
+        super().__init__(Testcase_Class)
 
 
-def Radix_LSD_Base4(array):
-    return Radix_LSD_BaseN(array, 4)
-# TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
+class Radix_LSD_Base4(Radix_LSD_BaseN):
+    def __init__(self, Testcase_Class):
+        super().__init__(Testcase_Class, Base=4)
 
 
-__all__ = member_loader.ListClass(__name__, blacklist=['Sort'])
+excepts = ['Sort', 'Radix_LSD_BaseN']
+__all__ = member_loader.ListClass(__name__, blacklist=excepts)
