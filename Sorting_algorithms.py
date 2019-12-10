@@ -335,7 +335,7 @@ class Merge(Sort):
             Sorted = []
             l, m = left, mid + 1
 
-            while(Left <= mid and m <= right):
+            while(l <= mid and m <= right):
 
                 if self.lo_compare(m, l, equal=True):
                     Sorted.append(self.array[l])
@@ -353,7 +353,7 @@ class Merge(Sort):
 
             for idx in range(right, left - 1, -1):
                 # Status(vars(), ['time'])
-                self.lo_assign(idx, Sorted.pop())
+                self.lo_assign(idx, Sorted.pop(), marker=True)
                 Add_Sorted_Area(idx)
 
         def Sub_merge(left, right):

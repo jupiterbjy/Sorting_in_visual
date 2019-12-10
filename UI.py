@@ -14,6 +14,13 @@ from Source_array import *
 import Sorting_algorithms as Sorters
 
 
+class values():
+    def __init__(self, algorithm, delay, length, coord):
+        self.sorter_al = algorithm
+        self.test_case = Source(delay, length)
+        self.widget_coord = coord
+
+
 def OnStart():
     print("yay")
 
@@ -90,7 +97,8 @@ class Ui_MainForm(object):
         output.append(str(self.VisualArea.size()))
         output.append(str(self.VisualArea.height()))
         output.append(str(self.VisualArea.rect()))
-        output.append()
+        output.append(str(self.VisualArea.geometry()))
+        output.append(str(type(self.VisualArea.geometry())))
         
         self.ConsoleOut_textedit.setText('\n'.join(output))
 
@@ -102,9 +110,20 @@ class Ui_MainForm(object):
         self.Reset_Button.setText(_translate("MainForm", "Reset"))
         self.Delay_Spin.setSuffix(_translate("MainForm", " ms"))
     
-    def getValues(self):
-        delay = self.Delay_Spin.Value()
-        length = slef.Nums_Spin.Value()
+    def getValues(self, initial=[]):
+        if not initial:
+            sorter = self.Sorts_Combo.Value()
+            delay = self.Delay_Spin.Value()
+            length = self.Nums_Spin.Value()
+        
+        
+        h = self.VisualArea.rect().height()
+        w = self.VisualArea.rect().width()
+        x = self.VisualArea.rect().x()
+        y = self.VisualArea.rect().x() + h
+        
+        relay = values(sorter, delay, length, coord)
+        
         
         self.testcase = Source(delay, length)
         return self.testcase
@@ -118,7 +137,17 @@ class Ui_MainForm(object):
     def GetGeometry(self):
         w, h = self.VisualArea.size()
         
-    def OnResize
+    def OnResize():
+        pass
+    
+    def OnStart():
+        # TODO: import UI-only output method and run via it
+        import MainProcess
+        
+        
+        
+        
+        pass
 
 
 if __name__ == "__main__":
