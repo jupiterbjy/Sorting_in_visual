@@ -1,8 +1,8 @@
 # Sorting in visual
-A project with ~2 hours per day is allocated. Trying to replicate some sorting actions visually.
+A project with ~1.5 hours per day is allocated - If I have no assignment from 22:00 ~ 23:30. 
 
-Since I can't do anything with UI or anything with Web IDE, nor I can use UAC priviledge in army pc either.
+Trying to replicate some sorting actions visually, motived by 'Sounds of Sorting'.
 
-Therefore, I created this project to apply what I've learned from 'Introducing Python' by Bill Lubanovic. This will gonna be console application unless I find a way to run UI app in GoorumIDE.
+Therefore, I created this project to apply what I've learned from 'Introducing Python' by Bill Lubanovic. This will start off by CLI application and now working on PyQt5 for UI.
 
-Just like last project, I know nothing about python - There's ton of things to learn to be more pythonic.
+Just like last project, I barely know about python - There's ton of things to learn to be more pythonic.
