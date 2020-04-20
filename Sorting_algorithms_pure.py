@@ -193,11 +193,9 @@ def Insertion(array):
 
     return array
 
-
 def Heap(array):
 
     def heapify(unsorted, idx, heap_size):
-        # Understand this more, next time!
         largest = idx
         left_idx = 2 * idx + 1
         right_idx = 2 * idx + 2
@@ -264,7 +262,6 @@ def Merge(array):
 
 
 def Quick(array):
-    # TODO: understand this mother hubberd
     n = len(array)
 
     def Sub_Quick(left, right):
@@ -334,7 +331,7 @@ def Radix_LSD_Base2(array):
     def counting_sort_bitwise(array, length, pos):
 
         counts = [0, 0]
-        results = [0 for i in range(length)]
+        results = [0 for _ in range(length)]
 
         for i in array:
             counts[i >> pos & 1] += 1
@@ -409,6 +406,5 @@ def Radix_LSD_Base4(array):
 # TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
 
 
-# Is this a bit too-lazy method for fillin' __all__?
 excepts = ['Swap', 'Status', 'Radix_LSD_BaseN']
 __all__ = member_loader.ListFunction(__name__, blacklist=excepts)
