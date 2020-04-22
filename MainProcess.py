@@ -25,7 +25,7 @@ def Visualizing(Class, name, out_func):
             "Frame : " + str(frame),
             "Access: " + Colorize(g_var.access, "YEL"),
             "Swap  : " + Colorize(g_var.swap, "PUR"),
-            "Time  : " + str(time() - start_time),
+            "Time  : " + str(round(time() - start_time, 2)),
         ]
 
         fast_p("_" * Class.length + "\n")
@@ -42,7 +42,7 @@ def Visualizing(Class, name, out_func):
 
             break
 
-    print("Script Ended.")
+    print("\nScript Ended.")
 
 
 def Lister(target, query, error="\n Try Again."):

@@ -1,4 +1,4 @@
-import member_loader
+from Tools import member_loader
 
 
 def Check_CMD():
@@ -76,5 +76,5 @@ def Colorize(txt, color):
     return ANSI_C.table[color] + s + ANSI_C.table["END"]
 
 
-__all__ = member_loader.ListFunction(__name__, name_only=True)
+__all__ = member_loader.ListFunction(__name__)
 __all__.append('ANSI_C')

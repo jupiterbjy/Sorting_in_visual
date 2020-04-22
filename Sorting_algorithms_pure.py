@@ -1,7 +1,4 @@
-import inspect
-from sys import modules
-
-import member_loader
+from Tools import member_loader
 
 '''Stores Function-formed algorithms for ease of self-creation'''
 # TODO: find better word than 'creation', have no Dictionary for now.
@@ -116,7 +113,6 @@ def Cocktail_shaker(array):
 def Cocktail_shaker_opt1(array):
     start = 0
     end = len(array) - 1
-    import time
 
     while start <= end:
         # time.sleep(0.2)

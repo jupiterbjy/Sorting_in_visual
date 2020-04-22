@@ -1,11 +1,15 @@
-from ANSI_table import ANSI_C
 from sys import stdout
-import member_loader
+import collections
+
+from ANSI_table import ANSI_C
+from Tools import member_loader
 import g_var
+
+
 fast_p = stdout.write
 
 
-def Color_matcher(index):
+def colorMatcher(index):
     # colors = [ANSI_C.YEL, ANSI_C.PUR, ANSI_C.RED, ANSI_C.END]
 
     # for target in g_var.markers, color in colors:
@@ -31,7 +35,7 @@ def Color_matcher(index):
 
 # https://en.wikipedia.org/wiki/Block_Elements
 # ▀ ▄ █
-def Vertcial(array):
+def vertical(array):
     n = len(array)
 
     def zipped(n1, n2):
@@ -58,13 +62,40 @@ def Vertcial(array):
             zipped(array[i << 1], array[(i << 1) + 1])
 
 
-def Zipped_main(array, digit=" "):
+def zipped_Bar(array):
+    output = (' ', '▁', '▂', '▃', '▄', '▅', '▆', '▇')
+    lines = []
+
+    for step in range(1 + (len(array) >> 3)):
+        out2 = []
+
+        for idx, i in enumerate(array):
+            out2.append(colorMatcher(idx))
+
+            if (step + 1) * 8 > i >= step * 8:
+                out2.append(output[i - step * 8])
+
+            elif i < step * 8:
+                out2.append(' ')
+
+            else:
+                out2.append('█')
+
+            out2.append(ANSI_C.END)
+
+        lines.append("".join(out2))
+
+    for i in reversed(lines):
+        fast_p(i + '\n')
+
+
+def zipped_Num(array, digit=" "):
     lines = []
     for step in range(int(len(array) / 10)):
         out2 = []
 
         for idx, i in enumerate(array):
-            out2.append(Color_matcher(idx))
+            out2.append(colorMatcher(idx))
 
             if (step + 1) * 10 > i >= step * 10:
                 out2.append(("" + str(i - step * 10)))
@@ -80,17 +111,7 @@ def Zipped_main(array, digit=" "):
         lines.append("".join(out2))
 
     for i in lines[::-1]:
-        print(i)
+        fast_p(i)
 
 
-def Zipped(array):
-    Zipped_main(array)
-
-
-def Zipped_Filled(array):
-    Zipped_main(array, "^")
-
-
-__all__ = member_loader.ListFunction(
-    __name__, name_only=True, blacklist=["Color_matcher", "Zipped_main"]
-)
+__all__ = member_loader.ListFunction(__name__, blacklist=["colorMatcher", "Zipped_main"])

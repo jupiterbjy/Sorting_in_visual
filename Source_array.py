@@ -1,5 +1,5 @@
 import random
-import member_loader
+from Tools import member_loader
 
 
 # Shuffling in Fisher-Yates way, with keyword arg.

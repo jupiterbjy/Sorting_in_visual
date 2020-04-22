@@ -1,6 +1,5 @@
-import time
 import g_var
-import member_loader
+from Tools import member_loader
 
 '''
 Created by looking at pseudo code in eng. wiki
@@ -37,9 +36,9 @@ def Swap(a, b, c):
     a[b], a[c] = a[c], a[b]
 
 
-# Not sure if this was good idea
+# Remove this mess
 
-class Sort():
+class _Sort():
     def __init__(self, Class):
         self.array = Class.array
         self.length = len(Class.array)
@@ -90,7 +89,7 @@ class Sort():
         Swap(self.array, idx1, idx2)
 
 
-class Bubble(Sort):
+class Bubble(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -116,7 +115,7 @@ class Bubble(Sort):
     '''
 
 
-class Bubble_opt1(Sort):
+class Bubble_opt1(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -136,7 +135,7 @@ class Bubble_opt1(Sort):
         return None
 
 
-class Bubble_opt2(Sort):
+class Bubble_opt2(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -159,7 +158,7 @@ class Bubble_opt2(Sort):
         return None
 
 
-class Cocktail_shaker(Sort):
+class Cocktail_shaker(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -199,7 +198,7 @@ class Cocktail_shaker(Sort):
         return None
 
 
-class Cocktail_shaker_opt1(Sort):
+class Cocktail_shaker_opt1(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -230,7 +229,7 @@ class Cocktail_shaker_opt1(Sort):
         End()
 
 
-class OddEven(Sort):
+class OddEven(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -254,7 +253,7 @@ class OddEven(Sort):
         End()
 
 
-class Selection(Sort):
+class Selection(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -273,7 +272,7 @@ class Selection(Sort):
         End()
 
 
-class Insertion(Sort):
+class Insertion(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -289,7 +288,7 @@ class Insertion(Sort):
         End()
 
 
-class Heap(Sort):
+class Heap(_Sort):
     # Boi, he's fast - reference from Kirb 8.0
     def __init__(self, Class):
         super().__init__(Class)
@@ -325,7 +324,7 @@ class Heap(Sort):
         End()
 
 
-class Merge(Sort):
+class Merge(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -368,7 +367,7 @@ class Merge(Sort):
         End()
 
 
-class Quick(Sort):
+class Quick(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -412,7 +411,7 @@ class Quick(Sort):
         End()
 
 
-class Counting(Sort):
+class Counting(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
         # TODO: find a way to visualize this kid.
@@ -439,7 +438,7 @@ class Counting(Sort):
         End()
 
 
-class Radix_LSD_Base2(Sort):
+class Radix_LSD_Base2(_Sort):
     def __init__(self, Class):
         super().__init__(Class)
 
@@ -484,7 +483,7 @@ class Radix_LSD_Base2(Sort):
 # TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
 
 
-class Radix_LSD_BaseN(Sort):
+class _Radix_LSD_BaseN(_Sort):
     def __init__(self, Class, Base=10):
         super().__init__(Class)
 
@@ -529,15 +528,14 @@ class Radix_LSD_BaseN(Sort):
         End()
 
 
-class Radix_LSD_Base10(Radix_LSD_BaseN):
+class Radix_LSD_Base10(_Radix_LSD_BaseN):
     def __init__(self, Testcase_Class):
         super().__init__(Testcase_Class)
 
 
-class Radix_LSD_Base4(Radix_LSD_BaseN):
+class Radix_LSD_Base4(_Radix_LSD_BaseN):
     def __init__(self, Testcase_Class):
         super().__init__(Testcase_Class, Base=4)
 
 
-excepts = ['Sort', 'Radix_LSD_BaseN']
-__all__ = member_loader.ListClass(__name__, blacklist=excepts)
+__all__ = member_loader.ListClass(__name__)
