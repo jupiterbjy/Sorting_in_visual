@@ -1,21 +1,21 @@
 import g_var
 from Tools import member_loader
 
-'''
+"""
 Created by looking at pseudo code in eng. wiki
 Stores modified sorting algorithms based on 'pure' ones.
-'''
+"""
 
 
 def End():
-    'Cleanup Color marks and let Visual thread end of thread.'
+    "Cleanup Color marks and let Visual thread end of thread."
     g_var.Color_reset()
     g_var.ev.wait()
     g_var.s_alive = False
 
 
 def Add_Sorted_Area(a1, a2=-1, b1=-1, b2=-1):
-    'Generate sorted area'
+    "Generate sorted area"
 
     def gen_arr(a, b):
         return list(range(a, b + 1))
@@ -29,7 +29,7 @@ def Add_Sorted_Area(a1, a2=-1, b1=-1, b2=-1):
     else:
         tmp = gen_arr(a1, a2) + gen_arr(b1, b2)
 
-    g_var.sorted_area += (set(tmp) - set(g_var.sorted_area))
+    g_var.sorted_area += set(tmp) - set(g_var.sorted_area)
 
 
 def Swap(a, b, c):
@@ -38,7 +38,8 @@ def Swap(a, b, c):
 
 # Remove this mess
 
-class _Sort():
+
+class _Sort:
     def __init__(self, Class):
         self.array = Class.array
         self.length = len(Class.array)
@@ -108,11 +109,11 @@ class Bubble(_Sort):
         return None
 
     # this don't do anything unless used like 'with bubble as bla bla'
-    '''
+    """
     def __exit__(self):
         End()
         print('Sorted')
-    '''
+    """
 
 
 class Bubble_opt1(_Sort):
@@ -334,7 +335,7 @@ class Merge(_Sort):
             Sorted = []
             l, m = left, mid + 1
 
-            while(l <= mid and m <= right):
+            while l <= mid and m <= right:
 
                 if self.lo_compare(m, l, equal=True):
                     Sorted.append(self.array[l])
@@ -428,7 +429,7 @@ class Counting(_Sort):
             counts[i + 1] += counts[i]
 
         for i in tmp:
-            Add_Sorted_Area(i-1)
+            Add_Sorted_Area(i - 1)
             self.lo_assign(counts[i] - 1, i, marker=True)
             counts[i] -= 1
 
@@ -443,7 +444,7 @@ class Radix_LSD_Base2(_Sort):
         super().__init__(Class)
 
         def count_bits(n):
-            if(n == 0):
+            if n == 0:
                 return 0
             else:
                 return 1 + count_bits(n >> 1)
@@ -465,7 +466,7 @@ class Radix_LSD_Base2(_Sort):
                 i2 = i >> pos & 1
 
                 self.lo_assign(counts[i2] - 1, i, marker=True)
-                
+
                 if pos == digit - 1:
                     Add_Sorted_Area(counts[i2] - 1)
 
@@ -480,6 +481,7 @@ class Radix_LSD_Base2(_Sort):
 
         End()
 
+
 # TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
 
 
@@ -488,16 +490,15 @@ class _Radix_LSD_BaseN(_Sort):
         super().__init__(Class)
 
         def count_digits(n):
-            if(n == 0):
+            if n == 0:
                 return 0
             else:
-                return 1 + count_digits(n//Base)
+                return 1 + count_digits(n // Base)
             # Pretty sure dividing aren't good way.
 
         def counting_sort_custom(pos):
-
             def Base_out(i):
-                return (i // Base**pos) % Base
+                return (i // Base ** pos) % Base
 
             counts = [0 for i in range(Base)]
             temp = self.array[::]
