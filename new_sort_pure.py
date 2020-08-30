@@ -1,11 +1,7 @@
-import array
+from collections.abc import MutableSequence
 
 
-def Swap(arr: array.array, idx1: int, idx2: int):
-    arr[idx1], arr[idx2] = arr[idx2], arr[idx1]
-
-
-def bubble(arr: array.array):
+def bubble(arr: MutableSequence):
     swapped = True
     n = len(arr)
 
@@ -15,5 +11,14 @@ def bubble(arr: array.array):
         for idx in range(n - 1):
             if arr[idx] > arr[idx + 1]:
                 swapped = True
-                Swap(arr, idx, idx + 1)
+                arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
     return arr
+
+
+if __name__ == '__main__':
+    from random import shuffle
+    from new_support import ArrayWrap
+    arr = ArrayWrap(list(i for i in range(20)))
+    shuffle(arr)
+    print(arr)
+    print(bubble(arr))
