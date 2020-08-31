@@ -5,18 +5,14 @@ from Tools import member_loader
 # Shuffling in Fisher-Yates way, with keyword arg.
 
 
-def shuffle(array):
+def shuffle(arr):
+    length = len(arr)
 
-    def Swap(a, b, c):
-        a[b], a[c] = a[c], a[b]
+    for i in range(length - 2):
+        j = random.randint(0, length)
+        arr[i], arr[j] = arr[j], arr[i]
 
-    length = len(array)
-
-    for i in range(length):
-        r = random.randint(0, length - i - 1)
-        Swap(array, r, -1 - i)
-
-    return array
+    return arr
 
 
 def generate(length=20, zero_offset=1):
