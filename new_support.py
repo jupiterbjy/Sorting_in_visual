@@ -20,12 +20,6 @@ class ArrayWrap(MutableSequence):
         self.access = 0
         self.write = 0
 
-        self.aux_arr = array.array('i')
-        self.aux_arr.extend(0 for _ in range(len(self.arr)))
-
-        self.aux_access = 0
-        self.aux_write = 0
-
         self.queue = q
         self.digit_max = len(str(max(self.arr)))
 
@@ -81,6 +75,10 @@ class ArrayWrap(MutableSequence):
 
     def apply_color_map(self):
         return [f(self.pad_str_length(v)) for f, v in zip(self.color_mapping, self.arr)]
+
+    def clear_counter(self):
+        self.access = 0
+        self.write = 0
 
 
 if __name__ == '__main__':
