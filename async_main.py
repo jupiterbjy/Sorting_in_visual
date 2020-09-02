@@ -1,6 +1,6 @@
 import asyncio
 import random
-import new_sort_pure
+import Sorting_algorithms_pure
 from new_support import ArrayWrap
 from collections.abc import Sequence, MutableSequence
 
@@ -26,7 +26,7 @@ async def visual_task(q: asyncio.Queue):
     while True:
         frame = await q.get()
         try:
-            print()
+            print(*frame)
         except TypeError:
             break
 
@@ -44,7 +44,8 @@ def shuffle(arr: MutableSequence):
 
 
 async def run_sort(arr: ArrayWrap):
-    new_sort_pure.bubble(arr)
+    Sorting_algorithms_pure.Heap(arr)
+    # new_sort_pure.Radix_LSD_Base2(arr)
     await arr.queue.put(10)  # end_val
 
 

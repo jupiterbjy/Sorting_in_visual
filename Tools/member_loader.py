@@ -1,5 +1,5 @@
 from sys import modules
-import inspect
+from inspect import getmembers, isclass, isfunction
 import re
 
 
@@ -7,12 +7,9 @@ def ListTarget(name, target, prefix_mode, blacklist, return_dict):
     """
     Return list of target, i.e. Class or Function in target module.
     Main usage is for generating __all__ upon function defining.
-
     i.e.
     __all__ = member_loader.ListFunction(__name__, name_only = True)
-
     Blacklist only supported for array return.
-
     On default will follow python's way, ignoring case starting with underscore.
     """
 
@@ -22,7 +19,7 @@ def ListTarget(name, target, prefix_mode, blacklist, return_dict):
     elif blacklist is None:
         blacklist = {}
 
-    members = inspect.getmembers(modules[name], target)
+    members = getmembers(modules[name], target)
 
     if prefix_mode:
         exclude = "".join([str(i) for i in blacklist])
@@ -40,12 +37,12 @@ def ListTarget(name, target, prefix_mode, blacklist, return_dict):
     return [i for i, _ in filtered]
 
 
-def ListClass(name, prefix_mode=True, blacklist=None, return_dict=False):
-    return ListTarget(name, inspect.isclass, prefix_mode, blacklist, return_dict)
+def ListClass(name, prefix_mode=False, blacklist=None, return_dict=False):
+    return ListTarget(name, isclass, prefix_mode, blacklist, return_dict)
 
 
-def ListFunction(name, prefix_mode=True, blacklist=None, return_dict=False):
-    return ListTarget(name, inspect.isfunction, prefix_mode, blacklist, return_dict)
+def ListFunction(name, prefix_mode=False, blacklist=None, return_dict=False):
+    return ListTarget(name, isfunction, prefix_mode, blacklist, return_dict)
 
 
 def FunctionToDict(func_list):

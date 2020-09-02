@@ -1,8 +1,6 @@
 import unittest
-from threading import Thread, Event
 
 import Sorting_algorithms_pure as SAP
-from Source_array import *
 
 
 def Loader(testcase, secondrun=[]):

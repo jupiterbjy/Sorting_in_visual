@@ -1,36 +1,10 @@
 from sys import stdout
-import collections
 
 from ANSI_table import ANSI_C
 from Tools import member_loader
-import g_var
 
 
 fast_p = stdout.write
-
-
-def colorMatcher(index):
-    # colors = [ANSI_C.YEL, ANSI_C.PUR, ANSI_C.RED, ANSI_C.END]
-
-    # for target in g_var.markers, color in colors:
-    # use zip next time
-
-    if index in g_var.comp_target:
-        color = ANSI_C.YEL
-
-    elif index in g_var.acce_target:
-        color = ANSI_C.BLU
-
-    elif index in g_var.swap_target:
-        color = ANSI_C.PUR
-
-    elif index in g_var.sorted_area:
-        color = ANSI_C.RED
-
-    else:
-        color = ANSI_C.END
-
-    return color
 
 
 # https://en.wikipedia.org/wiki/Block_Elements

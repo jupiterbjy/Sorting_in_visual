@@ -1,89 +1,61 @@
 from Tools import member_loader
-
-'''Stores Function-formed algorithms for ease of self-creation'''
-# TODO: find better word than 'creation', have no Dictionary for now.
-# import Sorting_algorithms_pure as sa
+from collections.abc import MutableSequence
 
 
-def Status(data, blacklist=[]):
-    'Used for Outputting variables with exceptions'
-
-    output = []
-    blacklist.append('END_indicator')
-
-    for i in data.keys():
-        for i2 in blacklist:
-            if i2 == 'END_indicator':
-                break
-
-            if i2 in i:
-                continue
-            else:
-                output.extend([i, str(data[i])])
-
-    blacklist = []  # prevent storing previous items.
-    print(' | '.join(output))
-
-
-def Swap(a, b, c):
-    a[b], a[c] = a[c], a[b]
-
-
-def Bubble(array):
+def bubble(arr: MutableSequence):
     swapped = True
-    n = len(array)
+    n = len(arr)
 
     while swapped:
         swapped = False
 
         for idx in range(n - 1):
-
-            if array[idx] > array[idx + 1]:
+            if arr[idx] > arr[idx + 1]:
                 swapped = True
-                Swap(array, idx, idx + 1)
-    return array
+                arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
+    return arr
 
 
-def Bubble_opt1(array):
+def Bubble_opt1(arr: MutableSequence):
     swapped = True
-    n = len(array)
+    n = len(arr)
 
     while swapped:
         swapped = False
 
         for idx in range(n - 1):
-            if array[idx] > array[idx + 1]:
+            if arr[idx] > arr[idx + 1]:
                 swapped = True
-                Swap(array, idx, idx + 1)
+                arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
         n -= 1
 
-    return array
+    return arr
 
 # In case more than one element is in final position, this is faster.
 
 
-def Bubble_opt2(array):
-    n = len(array)
+def Bubble_opt2(arr: MutableSequence):
+    n = len(arr)
     while True:
-        newn = 0
+        new_n = 0
 
         for idx in range(n - 1):
-            if array[idx] > array[idx + 1]:
-                Swap(array, idx, idx + 1)
-                newn = idx + 1
+            if arr[idx] > arr[idx + 1]:
+                arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
+                new_n = idx + 1
 
-        n = newn
+        n = new_n
 
         if n <= 1:
             break
-    return array
+    return arr
 
 
-def Cocktail_shaker(array):
+def Cocktail_shaker(arr: MutableSequence):
     swapped = True
     flip = False
     start = 0
-    end = len(array) - 1
+    end = len(arr) - 1
 
     while swapped:
         swapped = False
@@ -91,105 +63,98 @@ def Cocktail_shaker(array):
         if flip:
             flip = False
             for idx in range(end, start, -1):
-                if array[idx - 1] > array[idx]:
+                if arr[idx - 1] > arr[idx]:
                     swapped = True
-                    Swap(array, idx - 1, idx)
+                    arr[idx], arr[idx - 1] = arr[idx - 1], arr[idx]
             start += 1
 
         else:
             flip = True
             for idx in range(start, end):
-                if array[idx] > array[idx + 1]:
+                if arr[idx] > arr[idx + 1]:
                     swapped = True
-                    Swap(array, idx, idx + 1)
+                    arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
             end -= 1
 
-    return array
-
-    # idk why I spent 2 hours fixthing this. not sure why it's fixed.
-    # needs further testing
+    return arr
 
 
-def Cocktail_shaker_opt1(array):
+def Cocktail_shaker_opt1(arr: MutableSequence):
     start = 0
-    end = len(array) - 1
+    end = len(arr) - 1
 
     while start <= end:
-        # time.sleep(0.2)
         new_end = start
         new_start = end
 
         for idx in range(start, end):
-            if array[idx] > array[idx + 1]:
-                Swap(array, idx, idx + 1)
+            if arr[idx] > arr[idx + 1]:
+                arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
                 new_end = idx
 
         end = new_end
 
-        #Status(vars(), ['time'])
-
         for idx in range(end, start, -1):
-            if array[idx - 1] > array[idx]:
-                Swap(array, idx - 1, idx)
+            if arr[idx - 1] > arr[idx]:
+                arr[idx], arr[idx - 1] = arr[idx - 1], arr[idx]
                 new_start = idx - 1
 
         start = new_start
 
-        # Status(vars(), ['time'])
-
-    return array
+    return arr
 
 
-def OddEven(array):
+def OddEven(arr: MutableSequence):
     swapped = True
-    n = len(array)
+    n = len(arr)
 
     while swapped:
         swapped = False
 
         for idx in range(0, n - 1, 2):
 
-            if array[idx] > array[idx + 1]:
+            if arr[idx] > arr[idx + 1]:
                 swapped = True
-                Swap(array, idx, idx + 1)
+                arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
 
         for idx in range(1, n - 1, 2):
 
-            if array[idx] > array[idx + 1]:
+            if arr[idx] > arr[idx + 1]:
                 swapped = True
-                Swap(array, idx, idx + 1)
+                arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
 
-    return array
+    return arr
 
 
-def Selection(array):
-    length = len(array)
+def Selection(arr: MutableSequence):
+    length = len(arr)
 
     for loop in range(length):
         largest = 0
 
         for idx in range(length - loop):
-            if array[idx] > array[largest]:
+            if arr[idx] > arr[largest]:
                 largest = idx
 
-        Swap(array, idx, largest)
+        arr[idx], arr[largest] = arr[largest], arr[idx]
 
-    return array
+    return arr
 
 
-def Insertion(array):
-    length = len(array)
+def Insertion(arr: MutableSequence):
+    length = len(arr)
 
     for i in range(1, length):
         j = i
 
-        while j > 0 and array[j - 1] > array[j]:
-            Swap(array, j, j - 1)
+        while j > 0 and arr[j - 1] > arr[j]:
+            arr[j], arr[j - 1] = arr[j - 1], arr[j]
             j -= 1
 
-    return array
+    return arr
 
-def Heap(array):
+
+def Heap(arr: MutableSequence):
 
     def heapify(unsorted, idx, heap_size):
         largest = idx
@@ -206,43 +171,41 @@ def Heap(array):
             unsorted[largest], unsorted[idx] = unsorted[idx], unsorted[largest]
             heapify(unsorted, largest, heap_size)
 
-    n = len(array)
+    n = len(arr)
     for i in range(n // 2 - 1, -1, -1):
-        heapify(array, i, n)
+        heapify(arr, i, n)
 
     for i in range(n - 1, 0, -1):
-        Swap(array, 0, i)
-        heapify(array, 0, i)
+        arr[0], arr[i] = arr[i], arr[0]
+        heapify(arr, 0, i)
 
-    return array
+    return arr
 
 
-def Merge(array):
-    L, R = 0, len(array) - 1
+def Merge(arr: MutableSequence):
 
     def List_Merge(array, left, right, mid):
-        Sorted = []
-        l, r, m = left, right, mid + 1
+        sorted_ = []
+        l_, r, m = left, right, mid + 1
 
-        while(l <= mid and m <= right):
+        while l_ <= mid and m <= right:
 
-            if array[l] <= array[m]:
-                Sorted.append(array[l])
-                l += 1
+            if array[l_] <= array[m]:
+                sorted_.append(array[l_])
+                l_ += 1
             else:
-                Sorted.append(array[m])
+                sorted_.append(array[m])
                 m += 1
 
-        if l > mid:
+        if l_ > mid:
             for idx in range(m, right + 1):
-                Sorted.append(array[idx])
+                sorted_.append(array[idx])
         else:
-            for idx in range(l, mid + 1):
-                Sorted.append(array[idx])
+            for idx in range(l_, mid + 1):
+                sorted_.append(array[idx])
 
         for idx in range(right, left - 1, -1):
-            # Status(vars(), ['time'])
-            array[idx] = Sorted.pop()
+            array[idx] = sorted_.pop()
 
     def Sub_merge(array, left, right):
 
@@ -252,13 +215,13 @@ def Merge(array):
             Sub_merge(array, mid + 1, right)
             List_Merge(array, left, right, mid)
 
-    Sub_merge(array, L, R)
+    Sub_merge(arr, 0, len(arr) - 1)
 
-    return array
+    return arr
 
 
-def Quick(array):
-    n = len(array)
+def Quick(arr: MutableSequence):
+    n = len(arr)
 
     def Sub_Quick(left, right):
 
@@ -273,131 +236,127 @@ def Quick(array):
 
         mid = (right + left) // 2
 
-        if array[mid] < array[left]:
-            Swap(array, mid, left)
+        if arr[mid] < arr[left]:
+            arr[mid], arr[left] = arr[left], arr[mid]
 
-        if array[right] < array[left]:
-            Swap(array, right, left)
+        if arr[right] < arr[left]:
+            arr[right], arr[left] = arr[left], arr[right]
 
-        pivot = array[mid]
+        pivot = arr[mid]
 
         while True:
-            while array[left] < pivot:
+            while arr[left] < pivot:
                 left += 1
 
-            while array[right] > pivot:
+            while arr[right] > pivot:
                 right -= 1
 
             if left >= right:
                 return right
-            Swap(array, right, left)
+
+            arr[right], arr[left] = arr[left], arr[right]
 
     Sub_Quick(0, n - 1)
-    return array
+    return arr
 
 
-def Counting(array):
-    n = len(array)
-    m = max(array)
+def Counting(arr: MutableSequence):
+    n = len(arr)
+    m = max(arr)
 
-    counts = [0 for i in range(m + 1)]
-    results = [0 for i in range(n)]
+    counts = [0 for _ in range(m + 1)]
+    results = [0 for _ in range(n)]
 
-    for i in array:
+    for i in arr:
         counts[i] += 1
 
     for i in range(m):
         counts[i + 1] += counts[i]
 
-    for i in array:
+    for i in arr:
         results[counts[i] - 1] = i
         counts[i] -= 1
 
     return results
 
 
-def Radix_LSD_Base2(array):
+def Radix_LSD_Base2(arr: MutableSequence):
 
     def count_bits(n):
-        if(n == 0):
+        if n == 0:
             return 0
         else:
             return 1 + count_bits(n >> 1)
 
-    def counting_sort_bitwise(array, length, pos):
+    def counting_sort_bitwise(array, length_, pos):
 
         counts = [0, 0]
-        results = [0 for _ in range(length)]
+        results = [0 for _ in range(length_)]
 
-        for i in array:
-            counts[i >> pos & 1] += 1
+        for i_ in array:
+            counts[i_ >> pos & 1] += 1
 
         counts[1] += counts[0]
 
-        # Don't [::-1] waste Memory of another array size?
-        for i in array[::-1]:
-
-            results[counts[i >> pos & 1] - 1] = i
-            counts[i >> pos & 1] -= 1
-
-        # Tester(vars(), results)
+        for i_ in reversed(array):
+            results[counts[i_ >> pos & 1] - 1] = i_
+            counts[i_ >> pos & 1] -= 1
 
         return results
 
-    length = len(array)
-    digit = count_bits(max(array))
+    length = len(arr)
+    digit = count_bits(max(arr))
 
     for i in range(digit):
-        array = counting_sort_bitwise(array, length, i)
+        arr = counting_sort_bitwise(arr, length, i)
 
-    return array
+    return arr
 
 
-def Radix_LSD_BaseN(array, Base=10):
+def Radix_LSD_BaseN(arr: MutableSequence, base):
 
     def count_digits(n):
-        if(n == 0):
+        if n == 0:
             return 0
         else:
-            return 1 + count_digits(n // Base)
+            return 1 + count_digits(n // base)
 
-    def counting_sort_custom(array, length, pos, Base=10):
+    def counting_sort_custom(array, length_, pos):
 
-        def Base_out(i):
-            return (i // Base**pos) % Base
+        def Base_out(n):
+            return (n // base ** pos) % base
 
-        counts = [0 for i in range(Base)]
-        results = [0 for i in range(length)]
+        counts = [0 for _ in range(base)]
+        results = [0 for _ in range(length_)]
 
-        for i in array:
-            counts[Base_out(i)] += 1
+        for i_ in array:
+            counts[Base_out(i_)] += 1
 
-        for idx in range(Base - 1):
+        for idx in range(base - 1):
             counts[idx + 1] += counts[idx]
 
-        # Don't slicing waste Memory of another array size?
-        for i in array[::-1]:
+        for i_ in reversed(array):
 
-            results[counts[Base_out(i)] - 1] = i
-            counts[Base_out(i)] -= 1
+            results[counts[Base_out(i_)] - 1] = i_
+            counts[Base_out(i_)] -= 1
 
         return results
 
-    length = len(array)
-    digit = count_digits(max(array))
+    length = len(arr)
+    digit = count_digits(max(arr))
 
     for i in range(digit):
-        array = counting_sort_custom(array, length, i, Base)
+        arr = counting_sort_custom(arr, length, i)
 
-    return array
-
-
-def Radix_LSD_Base10(array):
-    return Radix_LSD_BaseN(array)
+    return arr
 
 
-def Radix_LSD_Base4(array):
-    return Radix_LSD_BaseN(array, 4)
+def Radix_LSD_Base10(arr):
+    return Radix_LSD_BaseN(arr, 10)
+
+
+def Radix_LSD_Base4(arr):
+    return Radix_LSD_BaseN(arr, 4)
 
 # TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
 
