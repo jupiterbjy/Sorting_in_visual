@@ -21,7 +21,6 @@ class ArrayWrap(MutableSequence):
         self.write = 0
 
         self.queue = q
-        self.digit_max = len(str(max(self.arr)))
 
     def __repr__(self):
         return str(self.arr)
@@ -60,11 +59,7 @@ class ArrayWrap(MutableSequence):
         color_func = self.color_map[action]
         self.color_mapping[idx] = color_func
 
-        self.queue.put_nowait(self.apply_color_map())
-
-    def pad_str_length(self, n: int):
-        return f"{n:^{self.digit_max}}"
-    # TODO: fix empty output
+        self.queue.put_nowait((self.access, self.write, tuple(self.color_mapping), tuple(self.arr)))
 
     def apply_color_condition(self):
         for idx, n in enumerate(self.arr):
@@ -73,17 +68,6 @@ class ArrayWrap(MutableSequence):
             else:
                 self.color_mapping[idx] = self.color_map['default']
 
-    def apply_color_map(self):
-        return [f(self.pad_str_length(v)) for f, v in zip(self.color_mapping, self.arr)]
-
     def clear_counter(self):
         self.access = 0
         self.write = 0
-
-
-if __name__ == '__main__':
-
-    test = ArrayWrap(i for i in range(20))
-    print(*test.apply_color_map())
-    print(*test[2:5])
-    print(*test.apply_color_map())

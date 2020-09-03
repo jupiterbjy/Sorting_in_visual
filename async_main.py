@@ -3,7 +3,7 @@ import random
 import re
 import Sorting_algorithms_pure
 from new_support import ArrayWrap
-from collections.abc import Sequence, MutableSequence
+from collections.abc import MutableSequence
 
 
 def get_size():
@@ -47,7 +47,8 @@ def get_sorts_list() -> list:
     # get list of sorts to play
     raw_list = input("Enter multiple index of sorts to play: ")
     try:
-        selected_list = [sort_list[i] for i in map(int, re.split(r"(!+|-+| +|/+|\.+)", raw_list))]
+        selected_list = [getattr(Sorting_algorithms_pure, sort_list[i])
+                         for i in map(int, re.split(r"(?:!+|-+| +|/+|\.+)", raw_list))]
 
     except IndexError:
         print("Index provided out of range, try again.")
@@ -61,47 +62,53 @@ def get_sorts_list() -> list:
         return selected_list
 
 
-async def visual_task(q: asyncio.Queue):
-    # first developing one-line mode
-    # TODO: add variable digit padding calculation
-
-    padding = "{0:2}"
+async def visual_task(q: asyncio.Queue, pad: int):
+    """
+    Task dealing with output formatting.
+    :param q:
+    :param pad: padding size of each int.
+    """
 
     while True:
-        frame = await q.get()
         try:
-            print(*frame)
+            access, write, color_func_map, frame = await q.get()
         except TypeError:
             break
+        else:
+            print(*(f(f"{i:{pad}}") for f, i in zip(color_func_map, frame)), f"|{access} {write}")
 
         await asyncio.sleep(0.05)
 
 
-async def run_sort(arr: ArrayWrap):
-    Sorting_algorithms_pure.Heap(arr)
-    # new_sort_pure.Radix_LSD_Base2(arr)
+async def run_sort(sort_func, arr: ArrayWrap):
+    sort_func(arr)
     await arr.queue.put(10)  # end_val
+    print()
 
 
-async def sort_main(test: MutableSequence):
-    steps_queue = asyncio.Queue()
-    list_object = ArrayWrap(test, steps_queue)
+async def sort_main(sort_list, test: MutableSequence):
+    for sort_type in sort_list:
+        print(sort_type.__name__)
+        steps_queue = asyncio.Queue()
+        list_object = ArrayWrap(test, steps_queue)
+        largest_digit = len(str(max(list_object)))
 
-    visual = asyncio.create_task(visual_task(steps_queue))
-    sort_task = asyncio.create_task(run_sort(list_object))
+        visual = asyncio.create_task(visual_task(steps_queue, largest_digit))
+        sort_task = asyncio.create_task(run_sort(sort_type, list_object))
 
-    await sort_task
-    await visual
-
+        await sort_task
+        await visual
 
 
 def main_loop():
 
     while True:
         testcase = generate_test(get_size())
-        sort_list = []
+        sort_list = get_sorts_list()
 
-        asyncio.run(sort_main(testcase))
+        asyncio.run(sort_main(sort_list, testcase))
+
+        break
 
 
 if __name__ == '__main__':

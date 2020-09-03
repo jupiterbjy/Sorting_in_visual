@@ -2,7 +2,7 @@ from Tools import member_loader
 from collections.abc import MutableSequence
 
 
-def bubble(arr: MutableSequence):
+def Bubble(arr: MutableSequence):
     swapped = True
     n = len(arr)
 
