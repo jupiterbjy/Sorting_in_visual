@@ -2,6 +2,7 @@ import asyncio
 import random
 import re
 import Sorting_algorithms_pure
+from VIsualMethod import inline
 from new_support import ArrayWrap
 from collections.abc import MutableSequence
 
@@ -62,28 +63,30 @@ def get_sorts_list() -> list:
         return selected_list
 
 
-async def visual_task(q: asyncio.Queue, pad: int):
+async def visual_task(q: asyncio.Queue, arr_reference: MutableSequence):
     """
     Task dealing with output formatting.
     :param q:
-    :param pad: padding size of each int.
+    :param arr_reference: Pass reference of currently sorted array.
     """
 
+    largest_digit = len(str(max(arr_reference)))
+
     while True:
+
         try:
             access, write, color_func_map, frame = await q.get()
         except TypeError:
             break
         else:
-            print(*(f(f"{i:{pad}}") for f, i in zip(color_func_map, frame)), f"|{access} {write}")
+            inline(access, write, color_func_map, frame, largest_digit)
 
         await asyncio.sleep(0.05)
 
 
 async def run_sort(sort_func, arr: ArrayWrap):
     sort_func(arr)
-    await arr.queue.put(10)  # end_val
-    print()
+    await arr.queue.put(None)  # end_val
 
 
 async def sort_main(sort_list, test: MutableSequence):
@@ -91,9 +94,8 @@ async def sort_main(sort_list, test: MutableSequence):
         print(sort_type.__name__)
         steps_queue = asyncio.Queue()
         list_object = ArrayWrap(test, steps_queue)
-        largest_digit = len(str(max(list_object)))
 
-        visual = asyncio.create_task(visual_task(steps_queue, largest_digit))
+        visual = asyncio.create_task(visual_task(steps_queue, list_object))
         sort_task = asyncio.create_task(run_sort(sort_type, list_object))
 
         await sort_task
