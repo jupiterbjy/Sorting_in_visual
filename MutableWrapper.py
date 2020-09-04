@@ -1,7 +1,7 @@
 import array
 import asyncio
 from collections.abc import MutableSequence, Iterable
-from new_color_support import red, green, blue, cyan, purple
+from new_color_support import *
 
 
 class CountingMutable(MutableSequence):
@@ -86,10 +86,11 @@ class PrintingCountingMutable(CountingMutable):
 class ArrayWrap(CountingMutable):
     color_map = {
         'default': lambda x: x,
-        'get': blue,
-        'del': red,
-        'set': cyan,
-        'sorted': green
+        'get': br_yellow,
+        'del': br_magenta,
+        'set': br_red,
+        'insert': br_cyan,
+        'sorted': br_blue
     }
 
     def __init__(self, source: (MutableSequence, Iterable), q: asyncio.Queue):
@@ -97,6 +98,9 @@ class ArrayWrap(CountingMutable):
         super().__init__(source)
         self.color_mapping = [self.color_map['default'] for _ in range(len(self.arr))]
         self.queue = q
+
+    def on_insert(self, idx, item):
+        self.on_call(idx, 'insert')
 
     def on_set(self, idx):
         self.on_call(idx, 'set')

@@ -182,9 +182,11 @@ def Heap(arr: MutableSequence):
     return arr
 
 
-def Merge(arr: MutableSequence):
+# Non-Inplace Sorts will have additional aux argument.
 
-    def List_Merge(array, left, right, mid):
+def Merge(arr: MutableSequence, aux: MutableSequence):
+
+    def join_parts(array, left, right, mid):
         sorted_ = []
         l_, r, m = left, right, mid + 1
 
@@ -207,15 +209,15 @@ def Merge(arr: MutableSequence):
         for idx in range(right, left - 1, -1):
             array[idx] = sorted_.pop()
 
-    def Sub_merge(array, left, right):
+    def sub_merge(array, left, right):
 
         if left < right:
             mid = (left + right) // 2
-            Sub_merge(array, left, mid)
-            Sub_merge(array, mid + 1, right)
-            List_Merge(array, left, right, mid)
+            sub_merge(array, left, mid)
+            sub_merge(array, mid + 1, right)
+            join_parts(array, left, right, mid)
 
-    Sub_merge(arr, 0, len(arr) - 1)
+    sub_merge(arr, 0, len(arr) - 1)
 
     return arr
 
@@ -361,5 +363,5 @@ def Radix_LSD_Base4(arr):
 # TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
 
 
-excepts = ['Swap', 'Status', 'Radix_LSD_BaseN']
+excepts = ['Radix_LSD_BaseN']
 __all__ = member_loader.ListFunction(__name__, blacklist=excepts)

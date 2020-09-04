@@ -3,7 +3,7 @@ class EscapeCode:
     BR_BLACK = '\033[90m'
     BR_RED = '\033[91m'
     BR_GREEN = '\033[92m'
-    BR_YEL = '\033[93m'
+    BR_YELLOW = '\033[93m'
     BR_BLUE = '\033[94m'
     BR_MAGENTA = '\033[95m'
     BR_CYAN = '\033[96m'
@@ -63,8 +63,8 @@ def br_green(txt: str):
     return colorize(txt, 'BR_GREEN')
 
 
-def br_yel(txt: str):
-    return colorize(txt, 'BR_YEL')
+def br_yellow(txt: str):
+    return colorize(txt, 'BR_YELLOW')
 
 
 def br_blue(txt: str):

@@ -3,7 +3,7 @@ import random
 import re
 import Sorting_algorithms_pure
 from VIsualMethod import inline
-from new_support import ArrayWrap
+from MutableWrapper import ArrayWrap
 from collections.abc import MutableSequence
 
 
@@ -81,7 +81,7 @@ async def visual_task(q: asyncio.Queue, arr_reference: MutableSequence):
         else:
             inline(access, write, color_func_map, frame, largest_digit)
 
-        await asyncio.sleep(0.05)
+        await asyncio.sleep(0.03)
 
 
 async def run_sort(sort_func, arr: ArrayWrap):
