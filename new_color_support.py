@@ -1,4 +1,21 @@
-def colorize_closure():
+
+class EscapeCode:
+    BR_BLACK = '\033[90m'
+    BR_RED = '\033[91m'
+    BR_GREEN = '\033[92m'
+    BR_YEL = '\033[93m'
+    BR_BLUE = '\033[94m'
+    BR_MAGENTA = '\033[95m'
+    BR_CYAN = '\033[96m'
+    BR_WHITE = '\033[97m'
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    FAINT = '\033[2m'
+    ITALIC = '\033[3m'
+    UNDERLINE = '\033[4m'
+
+
+def _colorize_closure(color_table):
     try:
         import colorama
 
@@ -9,59 +26,80 @@ def colorize_closure():
     else:
         colorama.init()
 
-        ansi_table = {
-            "RED": "\033[91m",
-            "GREEN": "\033[92m",
-            "BLUE": "\033[94m",
-            "YELLOW": "\033[93m",
-            "PURPLE": "\033[94m",
-            "CYAN": "\033[96m",
-            "END": "\033[0m",
-            "BOLD": "\033[1m",
-            "HEADER": "\033[95m",
-            "UNDERLINE": "\033[4m",
-        }
-
         def ansi_wrapper(txt, color):
-            return ansi_table[color] + str(txt) + ansi_table["END"]
+            return getattr(EscapeCode, color) + str(txt) + EscapeCode.RESET
 
         return ansi_wrapper
 
 
-colorize = colorize_closure()
+colorize = _colorize_closure(EscapeCode)
 
 
-# anti lambda?
-def red(txt: str):
-    return colorize(txt, 'RED')
+def _color_function_string_gen():
+    """
+    I'm too lazy to copy paste all those convenience functions manually.
+    """
+
+    formatting = '''
+    def {}(txt: str):
+        return colorize(txt, '{}')
+    '''
+    for n in EscapeCode.__dict__.keys():
+        try:
+            print(formatting.format(n.lower(), n))
+        except AttributeError:
+            pass
 
 
-def green(txt: str):
-    return colorize(txt, 'GREEN')
+def br_black(txt: str):
+    return colorize(txt, 'BR_BLACK')
 
 
-def blue(txt: str):
-    return colorize(txt, 'BLUE')
+def br_red(txt: str):
+    return colorize(txt, 'BR_RED')
 
 
-def cyan(txt: str):
-    return colorize(txt, 'CYAN')
+def br_green(txt: str):
+    return colorize(txt, 'BR_GREEN')
 
 
-def purple(txt: str):
-    return colorize(txt, 'PURPLE')
+def br_yel(txt: str):
+    return colorize(txt, 'BR_YEL')
+
+
+def br_blue(txt: str):
+    return colorize(txt, 'BR_BLUE')
+
+
+def br_magenta(txt: str):
+    return colorize(txt, 'BR_MAGENTA')
+
+
+def br_cyan(txt: str):
+    return colorize(txt, 'BR_CYAN')
+
+
+def br_white(txt: str):
+    return colorize(txt, 'BR_WHITE')
+
+
+def reset(txt: str):
+    return colorize(txt, 'RESET')
 
 
 def bold(txt: str):
     return colorize(txt, 'BOLD')
 
 
-def header(txt: str):
-    return colorize(txt, 'HEADER')
+def faint(txt: str):
+    return colorize(txt, 'FAINT')
+
+
+def italic(txt: str):
+    return colorize(txt, 'ITALIC')
 
 
 def underline(txt: str):
     return colorize(txt, 'UNDERLINE')
 
 
-__all__ = ['red', 'green', 'blue', 'cyan', 'purple', 'bold', 'header', 'underline']

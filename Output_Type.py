@@ -1,6 +1,6 @@
 from sys import stdout
 
-from ANSI_table import EscapeCode
+from new_color_support import EscapeCode
 from Tools import member_loader
 
 
