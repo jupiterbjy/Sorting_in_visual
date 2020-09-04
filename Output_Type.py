@@ -1,6 +1,6 @@
 from sys import stdout
 
-from ANSI_table import ANSI_C
+from ANSI_table import EscapeCode
 from Tools import member_loader
 
 
@@ -55,7 +55,7 @@ def zipped_Bar(array):
             else:
                 out2.append('█')
 
-            out2.append(ANSI_C.END)
+            out2.append(EscapeCode.RESET)
 
         lines.append("".join(out2))
 
@@ -80,7 +80,7 @@ def zipped_Num(array, digit=" "):
             else:
                 out2.append(digit)
 
-            out2.append(ANSI_C.END)
+            out2.append(EscapeCode.RESET)
 
         lines.append("".join(out2))
 

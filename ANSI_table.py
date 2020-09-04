@@ -40,41 +40,21 @@ def Check_ANSI(output=True):
             print("Running on ANSI compatable Terminal.")
 
 
-class ANSI_C():
-
-    RED = '\033[91m'
-    GRN = '\033[92m'
-    BLU = '\033[94m'
-    YEL = '\033[93m'
-    PUR = '\033[94m'
-    CYA = '\033[96m'
-    END = '\033[0m'
+class EscapeCode:
+    BR_BLACK = '\033[90m'
+    BR_RED = '\033[91m'
+    BR_GREEN = '\033[92m'
+    BR_YEL = '\033[93m'
+    BR_BLUE = '\033[94m'
+    BR_MAGENTA = '\033[95m'
+    BR_CYAN = '\033[96m'
+    BR_WHITE = '\033[97m'
+    RESET = '\033[0m'
     BOLD = '\033[1m'
-    HEADER = '\033[95m'
+    FAINT = '\033[2m'
+    ITALIC = '\033[3m'
     UNDERLINE = '\033[4m'
-
-    table = {
-        "RED": '\033[91m',
-        "GRN": '\033[92m',
-        "BLU": '\033[94m',
-        "YEL": '\033[93m',
-        "PUR": '\033[94m',
-        "CYA": '\033[96m',
-        "END": '\033[0m',
-        "BOLD": '\033[1m',
-        "HEADER": '\033[95m',
-        "UNDERLINE": '\033[4m',
-    }
-
-
-def C_list(idx):
-    return ANSI_C.table[list(ANSI_C.table.keys())[idx]]
 
 
 def Colorize(txt, color):
-    s = str(txt)
-    return ANSI_C.table[color] + s + ANSI_C.table["END"]
-
-
-__all__ = member_loader.ListFunction(__name__)
-__all__.append('ANSI_C')
+    return getattr(EscapeCode, color) + str(txt) + getattr(EscapeCode, "RESET")
