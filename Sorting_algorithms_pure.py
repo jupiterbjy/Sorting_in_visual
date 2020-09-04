@@ -182,9 +182,7 @@ def Heap(arr: MutableSequence):
     return arr
 
 
-# Non-Inplace Sorts will have additional aux argument.
-
-def Merge(arr: MutableSequence, aux: MutableSequence):
+def Merge(arr: MutableSequence):
 
     def join_parts(array, left, right, mid):
         sorted_ = []
@@ -259,7 +257,7 @@ def Quick(arr: MutableSequence):
             arr[right], arr[left] = arr[left], arr[right]
 
     Sub_Quick(0, n - 1)
-    return arr
+    # return arr
 
 
 def Counting(arr: MutableSequence):
@@ -279,7 +277,12 @@ def Counting(arr: MutableSequence):
         results[counts[i] - 1] = i
         counts[i] -= 1
 
-    return results
+    # return results
+
+    for idx, val in enumerate(results):
+        arr[idx] = val
+
+    # return arr
 
 
 def Radix_LSD_Base2(arr: MutableSequence):
@@ -310,9 +313,12 @@ def Radix_LSD_Base2(arr: MutableSequence):
     digit = count_bits(max(arr))
 
     for i in range(digit):
-        arr = counting_sort_bitwise(arr, length, i)
+        # arr = counting_sort_bitwise(arr, length, i)
+        # going one more loop to 'update' arr, not 'aliasing' to new object.
+        for idx, val in counting_sort_bitwise(arr, length, i):
+            arr[idx] = val
 
-    return arr
+    # return arr
 
 
 def Radix_LSD_BaseN(arr: MutableSequence, base):
@@ -348,9 +354,12 @@ def Radix_LSD_BaseN(arr: MutableSequence, base):
     digit = count_digits(max(arr))
 
     for i in range(digit):
-        arr = counting_sort_custom(arr, length, i)
+        # arr = counting_sort_custom(arr, length, i)
+        # going one more loop to 'update' arr, not 'aliasing' to new object.
+        for idx, val in enumerate(counting_sort_custom(arr, length, i)):
+            arr[idx] = val
 
-    return arr
+    # return arr
 
 
 def Radix_LSD_Base10(arr):
