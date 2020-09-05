@@ -1,12 +1,12 @@
 from sys import modules
 from inspect import getmembers, isclass, isfunction
-import re
+# import re
 
 
 def ListTarget(name, target, blacklist, return_dict):
 
     if blacklist is None:
-        blacklist = {"_"}
+        blacklist = {}
 
     try:
         members = getmembers(modules[name], target)
@@ -21,7 +21,7 @@ def ListTarget(name, target, blacklist, return_dict):
     # else:
     #     filtered = [i for i in members if i[0] not in blacklist]
 
-    filtered = [i for i in members if i[0] not in blacklist]
+    filtered = [i for i in members if i[0] not in blacklist and not i[0].startswith('_')]
 
     return FunctionToDict([i for _, i in filtered]) if return_dict else [i for i, _ in filtered]
 

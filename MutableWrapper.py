@@ -128,3 +128,6 @@ class ArrayWrap(CountingMutable):
                 self.color_mapping[idx] = self.color_map['sorted']
             else:
                 self.color_mapping[idx] = self.color_map['default']
+
+    def mark_all_sorted(self):
+        return self.access, self.write, [self.color_map['sorted'] for _ in range(len(self.arr))], self.arr

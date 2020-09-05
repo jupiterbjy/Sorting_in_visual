@@ -79,26 +79,29 @@ def select_sorts_list() -> list:
         return selected_list
 
 
-async def visual_task(q: asyncio.Queue, arr_reference: MutableSequence, visualize):
+async def visual_task(q: asyncio.Queue, arr_reference: ArrayWrap, visualize, sort_name: str):
     """
     Task dealing with output formatting.
     :param q:
     :param arr_reference: Pass reference of currently sorted array.
     :param visualize: Function to draw
+    :param sort_name: Name of sorting algorithm in-run.
     """
 
     largest_digit = len(str(max(arr_reference)))
+    VisualMethod.Methods.clear()
 
     while True:
 
         try:
             access, write, color_func_map, frame = await q.get()
         except TypeError:
+            visualize(*arr_reference.mark_all_sorted(), largest_digit, sort_name)
             break
         else:
-            visualize(access, write, color_func_map, frame, largest_digit)
+            visualize(access, write, color_func_map, frame, largest_digit, sort_name)
 
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(0.05)
 
 
 async def run_sort(sort_func, arr: ArrayWrap):
@@ -108,11 +111,10 @@ async def run_sort(sort_func, arr: ArrayWrap):
 
 async def sort_main(sort_list, test: MutableSequence, visualizer):
     for sort_type in sort_list:
-        print(sort_type.__name__)
         steps_queue = asyncio.Queue()
         list_object = ArrayWrap(test, steps_queue)
 
-        visual = asyncio.create_task(visual_task(steps_queue, list_object, visualizer))
+        visual = asyncio.create_task(visual_task(steps_queue, list_object, visualizer, sort_type.__name__))
         sort_task = asyncio.create_task(run_sort(sort_type, list_object))
 
         await sort_task
