@@ -1,8 +1,7 @@
 from sys import stdout
 
 from new_color_support import EscapeCode
-from Tools import member_loader
-
+import GetModuleReference
 
 fast_p = stdout.write
 

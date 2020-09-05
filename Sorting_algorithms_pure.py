@@ -1,4 +1,4 @@
-from Tools import member_loader
+import GetModuleReference
 import array
 from collections.abc import MutableSequence
 
@@ -305,7 +305,7 @@ def Radix_LSD_Base2(arr: MutableSequence):
     # return arr
 
 
-def Radix_LSD_BaseN(arr: MutableSequence, base):
+def _Radix_LSD_BaseN(arr: MutableSequence, base):
 
     def count_digits(n):
         if n == 0:
@@ -347,14 +347,13 @@ def Radix_LSD_BaseN(arr: MutableSequence, base):
 
 
 def Radix_LSD_Base10(arr):
-    return Radix_LSD_BaseN(arr, 10)
+    return _Radix_LSD_BaseN(arr, 10)
 
 
 def Radix_LSD_Base4(arr):
-    return Radix_LSD_BaseN(arr, 4)
+    return _Radix_LSD_BaseN(arr, 4)
 
 # TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
 
 
-excepts = ['Radix_LSD_BaseN']
-__all__ = member_loader.ListFunction(__name__, blacklist=excepts)
+__all__ = GetModuleReference.ListFunction(__name__)

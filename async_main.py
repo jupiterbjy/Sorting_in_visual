@@ -2,7 +2,8 @@ import asyncio
 import random
 import re
 import Sorting_algorithms_pure
-from VIsualMethod import inline
+import VisualMethod
+import GetModuleReference
 from MutableWrapper import ArrayWrap
 from collections.abc import MutableSequence
 
@@ -18,6 +19,7 @@ def get_size():
 
 
 def select_visualize_method():
+    lists = GetModuleReference.ListFunction(VisualMethod)
     pass
 
 
