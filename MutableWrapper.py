@@ -18,30 +18,33 @@ class CountingMutable(MutableSequence):
         return f"{str(self.arr)}, access = {self.access}, write = {self.write}"
 
     def insert(self, index: int, o) -> None:
+        self.arr.insert(index, o)  # fail-fast
+
+        self.write += 1
         self.on_insert(index, o)
-        self.arr.insert(index, o)
 
     def __getitem__(self, i: (int, slice)):
-        try:
-            self.on_get(i)
+        val = self.arr[i]  # creating unnecessary name to fail-fast.
+
+        if isinstance(i, slice):
+            for idx in range(i.start, i.stop, i.step if i.step else 1):
+                self.access += 1
+                self.on_get(idx)
+        else:
             self.access += 1
+            self.on_get(i)
 
-        except TypeError:
-            if isinstance(i, slice):
-                for idx in range(i.start, i.stop, i.step if i.step else 1):
-                    self.on_get(idx)
-                    self.access += 1
-
-        return self.arr[i]
+        return val
 
     def __setitem__(self, i: int, o) -> None:
-        self.on_set(i)
         self.arr[i] = o
+
         self.write += 1
+        self.on_set(i)
 
     def __delitem__(self, i: int) -> None:  # I don't think I'm gonna use it.
-        self.on_del(i)
         del self.arr[i]
+        self.on_del(i)
 
     def __len__(self) -> int:
         return len(self.arr)
