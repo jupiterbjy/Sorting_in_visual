@@ -81,7 +81,7 @@ def select_sorts_list() -> list:
 
 async def visual_task(q: asyncio.Queue, arr_reference: ArrayWrap, visualize, sort_name: str):
     """
-    Task dealing with output formatting.
+    Task dealing with output handling.
     :param q:
     :param arr_reference: Pass reference of currently sorted array.
     :param visualize: Function to draw
