@@ -299,7 +299,7 @@ def Radix_LSD_Base2(arr: MutableSequence):
     for i in range(digit):
         # arr = counting_sort_bitwise(arr, length, i)
         # going one more loop to 'update' arr, not 'aliasing' to new object.
-        for idx, val in counting_sort_bitwise(arr, length, i):
+        for idx, val in enumerate(counting_sort_bitwise(arr, length, i)):
             arr[idx] = val
 
     # return arr

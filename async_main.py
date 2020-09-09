@@ -101,7 +101,7 @@ async def visual_task(q: asyncio.Queue, arr_reference: ArrayWrap, visualize, sor
         else:
             visualize(access, write, color_func_map, frame, largest_digit, sort_name)
 
-        await asyncio.sleep(0.05)
+        await asyncio.sleep(0.02)
 
 
 async def run_sort(sort_func, arr: ArrayWrap):

@@ -40,18 +40,21 @@ def _horizontal(convert_func):
     return inner
 
 
-def _str_convert_wrapper(lim, output_table):
+def _line_str_convert_wrapper(lim, output_table: dict):
+    """Assuming dict has key for filled value too, and use len of dict for conversion.
+    Also assuming max item size is same as array length"""
 
-    def str_convert_gen(val: int, length):
-        for _ in range(length // lim + (1 if length % lim != 0 else 0)):  # assuming arr max val is same as arr length.
+    length_ = len(output_table)
+
+    def str_convert_gen(val: int, item_counts):
+        for _ in range(item_counts // lim + (1 if item_counts % lim != 0 else 0)):
             if val > lim:
-                yield output_table[-1]
+                yield output_table['Filled']
                 val -= lim
             else:
                 yield output_table[val]
                 val = 0
     return str_convert_gen
-
 
 
 def _num_conv_gen(val: int, length):
@@ -69,7 +72,7 @@ def _num_conv_gen(val: int, length):
             val = 0
 
 
-def _two_in_one_gen(val: int, length):
+def _dot_triple_gen(val: int, length):
     for _ in range(length >> 1 + (1 if length & 1 != 0 else 0)):
         if val > 2:
             yield ' '
@@ -85,13 +88,12 @@ def _two_in_one_gen(val: int, length):
                 yield ' '
 
 
-def _dot_triple_gen(val: int, length):
-    pass
-
-
-horizontal_bar = _horizontal(_str_convert_wrapper((" ", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█")))
+# change to use str.translate()
+horizontal_bar = _horizontal(_line_str_convert_wrapper(8, (" ", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█")))
 horizontal_num = _horizontal(_num_conv_gen)
-horizontal_block = _horizontal(_two_in_one_gen)
+horizontal_dot = _horizontal(_dot_triple_gen(3, (".", "·", "˙")))
+
+#
 
 if __name__ == "__main__":
     n = 30
