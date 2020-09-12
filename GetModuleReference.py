@@ -1,38 +1,34 @@
 from sys import modules
 from inspect import getmembers, isclass, isfunction
-# import re
+from types import ModuleType
 
 
-def ListTarget(name, target, blacklist, return_dict):
+def ListTarget(module_name: (str, ModuleType), target, blacklist: set, return_dict):
 
     if blacklist is None:
-        blacklist = {}
+        blacklist = set()
 
     try:
-        members = getmembers(modules[name], target)
+        target_module = modules[module_name]
     except KeyError:
-        members = getmembers(modules[name.__name__], target)
+        if isinstance(module_name, ModuleType):
+            target_module = module_name
+        else:
+            raise
 
-    # if prefix_mode:
-    #     exclude = "".join([str(i) for i in blacklist])
-    #     regex = "^[" + exclude + "]"
-    #
-    #     filtered = [i for i in members if not bool(re.match(regex, i[0]))]
-    # else:
-    #     filtered = [i for i in members if i[0] not in blacklist]
+    members = getmembers(target_module, target)
 
-    filtered = [i for i in members if i[0] not in blacklist and not i[0].startswith('_')]
+    filtered = [(name, ref) for name, ref in members
+                if name not in blacklist
+                and not name.startswith('_')
+                and module_name is modules[ref.__module__]]
 
-    return FunctionToDict([i for _, i in filtered]) if return_dict else [i for i, _ in filtered]
+    return {name: ref for name, ref in filtered} if return_dict else tuple(name for name, _ in filtered)
 
 
-def ListClass(name, blacklist=None, return_dict=False):
+def ListClass(name, blacklist: set = None, return_dict=False):
     return ListTarget(name, isclass, blacklist, return_dict)
 
 
-def ListFunction(name, blacklist=None, return_dict=False):
+def ListFunction(name, blacklist: set = None, return_dict=False):
     return ListTarget(name, isfunction, blacklist, return_dict)
-
-
-def FunctionToDict(func_list):
-    return dict((i.__name__, i) for i in func_list)
