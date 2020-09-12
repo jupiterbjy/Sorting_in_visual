@@ -2,10 +2,10 @@ import asyncio
 import random
 import re
 import Sorting_algorithms_pure
-import VisualMethod
 import GetModuleReference
 from MutableWrapper import ArrayWrap
 from collections.abc import MutableSequence
+from VisualMethod import OutputMethods, ANSIWrap
 
 
 def get_size():
@@ -42,13 +42,13 @@ def show_list(items):
 
 
 def select_visualize_method():
-    visual_list = GetModuleReference.ListFunction(VisualMethod)
+    visual_list = GetModuleReference.ListFunction(OutputMethods)
     show_list(visual_list)
 
     # get visual method
     raw_input = input("Enter visualizing method index: ")
     try:
-        selected = getattr(VisualMethod, visual_list[int(raw_input)])
+        selected = getattr(OutputMethods, visual_list[int(raw_input)])
     except ValueError:
         print("Wrong index provided, try again.")
         return select_visualize_method()
@@ -89,7 +89,7 @@ async def visual_task(q: asyncio.Queue, arr_reference: ArrayWrap, visualize, sor
     """
 
     largest_digit = len(str(max(arr_reference)))
-    VisualMethod.Methods.clear()
+    ANSIWrap.clear()
 
     while True:
 

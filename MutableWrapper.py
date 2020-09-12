@@ -1,7 +1,7 @@
 import array
 import asyncio
 from collections.abc import MutableSequence, Iterable
-from new_color_support import *
+from VisualMethod.ANSIWrap import *
 
 
 class CountingMutable(MutableSequence):

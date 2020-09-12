@@ -1,3 +1,5 @@
+from sys import stdout
+
 
 class EscapeCode:
     BR_BLACK = '\033[90m'
@@ -33,6 +35,15 @@ def _colorize_closure(color_table):
 
 
 colorize = _colorize_closure(EscapeCode)
+
+
+def clear():
+    # might need module 'reprint'..
+    stdout.write("\x1b[2J\x1b[H")
+
+
+def go_back(line: int):
+    stdout.write(f"\x1b[{line}F")
 
 
 def _color_function_string_gen():
