@@ -3,19 +3,10 @@ import random
 import re
 import Sorting_algorithms_pure
 import GetModuleReference
+from itertools import cycle
 from MutableWrapper import ArrayWrap
 from collections.abc import MutableSequence
 from VisualMethod import OutputMethods, ANSIWrap
-
-
-def get_size():
-    size = input("Set number of items to sort: ")
-
-    try:
-        return int(size)
-    except ValueError:
-        return get_size()
-        # I don't expect someone `mistakenly` call this function up to recursion limit.
 
 
 def generate_test(n: int):
@@ -41,22 +32,45 @@ def show_list(items):
         print(f"{idx:{digit}} {item}")
 
 
-def select_visualize_method():
-    visual_list = GetModuleReference.ListFunction(OutputMethods)
+def get_size() -> tuple:
+    raw_input = input("Set single or multiple number of items to sort: ")
+
+    try:
+        return tuple(map(int, re.split(r"(?:!+|-+| +|/+|\.+)", raw_input)))
+    except ValueError:
+        return get_size()
+    finally:
+        ANSIWrap.clear()
+        # I don't expect someone `mistakenly` call this function up to recursion limit.
+
+
+def select_visualize_method() -> list:
+
+    visual_list = GetModuleReference.ListFunction(OutputMethods, blacklist={"create_horizontal"})
     show_list(visual_list)
 
     # get visual method
-    raw_input = input("Enter visualizing method index: ")
+    raw_input = input("Enter multiple visualizing method index: ")
     try:
-        selected = getattr(OutputMethods, visual_list[int(raw_input)])
+        selected_list = [getattr(OutputMethods, visual_list[i])
+                         for i in map(int, re.split(r"(?:!+|-+| +|/+|\.+)", raw_input))]
+
+    except IndexError:
+        print("Index provided out of range, try again.")
+        return select_visualize_method()
+
     except ValueError:
         print("Wrong index provided, try again.")
         return select_visualize_method()
-
-    return selected
+    else:
+        return selected_list
+    finally:
+        ANSIWrap.clear()
 
 
 def select_sorts_list() -> list:
+    ANSIWrap.clear()
+
     # show list of sorts implemented
     sort_list = GetModuleReference.ListFunction(Sorting_algorithms_pure)
     show_list(sort_list)
@@ -74,9 +88,10 @@ def select_sorts_list() -> list:
     except ValueError:
         print("Wrong index provided, try again.")
         return select_sorts_list()
-
     else:
         return selected_list
+    finally:
+        ANSIWrap.clear()
 
 
 async def visual_task(q: asyncio.Queue, arr_reference: ArrayWrap, visualize, sort_name: str):
@@ -92,7 +107,6 @@ async def visual_task(q: asyncio.Queue, arr_reference: ArrayWrap, visualize, sor
     ANSIWrap.clear()
 
     while True:
-
         try:
             access, write, color_func_map, frame = await q.get()
         except TypeError:
@@ -101,37 +115,46 @@ async def visual_task(q: asyncio.Queue, arr_reference: ArrayWrap, visualize, sor
         else:
             visualize(access, write, color_func_map, frame, largest_digit, sort_name)
 
-        await asyncio.sleep(0.02)
+        await asyncio.sleep(0.003)
 
 
 async def run_sort(sort_func, arr: ArrayWrap):
     sort_func(arr)
-    await arr.queue.put(None)  # end_val
+    await arr.queue.put(None)  # intentionally raise error in visual_task
 
 
-async def sort_main(sort_list, test: MutableSequence, visualizer):
-    for sort_type in sort_list:
+async def sort_main(sort_list, visualizer, testcases):
+    for idx, (sort, visual, test) in enumerate(zip(sort_list, cycle(visualizer), cycle(testcases))):
         steps_queue = asyncio.Queue()
         list_object = ArrayWrap(test, steps_queue)
 
-        visual = asyncio.create_task(visual_task(steps_queue, list_object, visualizer, sort_type.__name__))
-        sort_task = asyncio.create_task(run_sort(sort_type, list_object))
+        visual = asyncio.create_task(visual_task(steps_queue, list_object, visual, sort.__name__))
+        sort_task = asyncio.create_task(run_sort(sort, list_object))
 
         await sort_task
         await visual
+        print(f"\n{idx + 1}/{len(sort_list)} Completed.")
+        await asyncio.sleep(2)
 
 
 def main_loop():
 
     while True:
-        testcase = generate_test(get_size())
         sort_list = select_sorts_list()
-        visualizing_method = select_visualize_method()
+        print(f"Selected: {' '.join(i.__name__ for i in sort_list)}")
+        testcase_list = map(generate_test, get_size())
+        visual_list = select_visualize_method()
 
-        asyncio.run(sort_main(sort_list, testcase, visualizing_method))
+        asyncio.run(sort_main(sort_list, visual_list, testcase_list))
 
         break
 
 
 if __name__ == '__main__':
     main_loop()
+
+'''
+1 3 13 6 8 5 7 9 4 10 11
+20 20 20 20 20 40 40 40 30 40 40
+0 1 0 0 0 0 0 0 2 0 0
+'''

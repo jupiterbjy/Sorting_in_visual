@@ -38,7 +38,7 @@ def _horizontal(convert_func):
     return inner
 
 
-def _line_str_convert_wrapper(output_table: Sequence, over=' '):
+def create_horizontal(output_table: Sequence, over=' '):
     """converts output with numeral system based on len(output_table).
 
     for i.e. ('!', '@', '#') will be mapped to (0, 1, 2) respectively.
@@ -60,9 +60,9 @@ def _line_str_convert_wrapper(output_table: Sequence, over=' '):
 
 
 # change to use str.translate()
-horizontal_bar = _line_str_convert_wrapper((" ", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"), over="█")
-horizontal_num = _line_str_convert_wrapper((" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "X"))
-horizontal_dot = _line_str_convert_wrapper((" ", bold("."), bold("·"), bold("˙")))
+horizontal_bar = create_horizontal((" ", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"), over="█")
+horizontal_num = create_horizontal((" ", *(str(i) for i in range(1, 10)), bold("X")))
+horizontal_dot = create_horizontal((" ", *map(bold, ".·˙")))  # this runs too slow
 
 
 if __name__ == "__main__":
