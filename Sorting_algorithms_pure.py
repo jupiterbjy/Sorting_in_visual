@@ -120,15 +120,14 @@ def Selection(arr: MutableSequence):
             if arr[idx] > arr[largest]:
                 largest = idx
 
+        # noinspection PyUnboundLocalVariable
         arr[idx], arr[largest] = arr[largest], arr[idx]
 
     # return arr
 
 
 def Insertion(arr: MutableSequence):
-    length = len(arr)
-
-    for i in range(1, length):
+    for i in range(1, len(arr)):
         j = i
 
         while j > 0 and arr[j - 1] > arr[j]:
@@ -354,6 +353,105 @@ def Radix_LSD_Base4(arr):
     return _Radix_LSD_BaseN(arr, 4)
 
 # TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
+# TODO: separate sorts into respective .py files for easier access to reused components.
+
+
+def WikiSort_in_place(arr: MutableSequence, _64bit=False):
+    """Implementation based on:
+    https://github.com/BonzaiThePenguin/WikiSort/blob/master/Chapter%201.%20Tools.md"""
+
+    def swap(arr_, idx1, idx2):
+        arr_[idx1], arr_[idx2] = arr_[idx2], arr_[idx1]
+
+    def reverse(arr_, range_: range):
+        for idx in range(len(range_) // 2 - 1, -1, -1):
+            swap(arr_, range_.start + idx, range_.stop - idx - 1)
+
+    def rotate(arr_, range_: range, amount):
+        reverse(arr_, range(range_.start, range_.start + amount))
+        reverse(arr_, range(range_.start + amount, range_.stop))
+        reverse(arr_, range_)
+
+    def _binary_main(arr_, range_: range, val, comp):
+        start_ = range_.start
+        end_ = range_.stop
+        while start_ < end_:
+            mid_ = start_ + (end_ - start_) // 2
+            if comp(arr_[mid_], val):
+                start_ = mid_ + 1
+            else:
+                end_ = mid_
+
+        if start_ == range_.stop and comp(arr_[start_], val):
+            start_ = start_ + 1
+        return start_
+
+    def binary_first(arr_, range_: range, val):
+        return _binary_main(arr_, range_, val, lambda x, y: x < y)
+
+    def binary_last(arr_, range_: range, val):
+        return _binary_main(arr_, range_, val, lambda x, y: x <= y)
+
+    def length_gen(start_, stop_, multiply_factor=1):
+        """Step is self value."""
+        curr = start_
+        while curr < stop_:
+            yield curr
+            curr *= multiply_factor
+
+    def insertion(arr_: MutableSequence, start_, end_):
+        for i in range(start_, end_):
+            j = i
+
+            while j > start_ and arr_[j - 1] > arr_[j]:
+                swap(arr_, j, j - 1)
+                j -= 1
+
+    def merge_in_place(arr_, range_a, range_b):
+        while len(range_a) > 0 and len(range_b) > 0:
+            mid_ = binary_first(arr_, range_b, arr_[range_a.start])
+            amount = mid_ - range_a.stop
+            rotate(arr_, range(range_a.start, mid_), amount)
+
+            range_b = range(mid_, range_b.stop)
+            range_a = range(range_a.start + amount, mid_)
+            range_a = range(binary_last(arr_, range_a, arr_[range_a.start]), mid_)
+
+    def floor_by_power_2(x: int):
+        for n in range(6 if _64bit else 5):
+            x = x | (x >> 2**n)
+        else:
+            return x - (x >> 1)
+
+    # main loop
+
+    power_of_two = floor_by_power_2(len(arr))
+    scale = len(arr) / power_of_two
+
+    for merge in range(0, power_of_two, 16):
+        start = int(merge * scale)
+        end = int(start + 16 * scale)
+        insertion(arr, start, end)
+
+    for length in length_gen(16, power_of_two, multiply_factor=2):
+        for merge in range(0, power_of_two, 2 * length):
+
+            start = int(merge * scale)
+            mid = int((merge + length) * scale)
+            end = int((merge + length * 2) * scale)
+
+            if arr[end - 1] < arr[start]:
+                rotate(arr, range(start, end), mid - start)
+            elif arr[mid - 1] > arr[mid]:
+                merge_in_place(arr, range(start, mid), range(mid, end))
 
 
 __all__ = GetModuleReference.ListFunction(__name__)
+
+if __name__ == '__main__':
+    testcase = [i for i in range(100)]
+    from async_main import shuffle
+    shuffle(testcase)
+    print(testcase)
+    WikiSort_in_place(testcase)
+    print(testcase)
