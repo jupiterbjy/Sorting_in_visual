@@ -357,40 +357,96 @@ def Radix_LSD_Base4(arr):
 
 
 def WikiSort_in_place(arr: MutableSequence, _64bit=False):
+    import itertools
     """Implementation based on:
     https://github.com/BonzaiThePenguin/WikiSort/blob/master/Chapter%201.%20Tools.md"""
 
     def swap(arr_, idx1, idx2):
         arr_[idx1], arr_[idx2] = arr_[idx2], arr_[idx1]
 
+    def linear(arr_, range_: range, val):
+        for idx in range_:
+            if arr_[idx] == val:
+                return idx
+
     def reverse(arr_, range_: range):
         for idx in range(len(range_) // 2 - 1, -1, -1):
             swap(arr_, range_.start + idx, range_.stop - idx - 1)
 
+    def block_swap(arr_, start1, start2, block_size):
+        for idx in range(block_size):
+            swap(arr_, start1 + idx, start2 + idx)
+
     def rotate(arr_, range_: range, amount):
-        reverse(arr_, range(range_.start, range_.start + amount))
-        reverse(arr_, range(range_.start + amount, range_.stop))
+        if len(range_) == 0:
+            return
+
+        # no plan to use cache for now
+        split = range_.start + amount if amount >= 0 else range_.stop + amount
+
+        reverse(arr_, range(range_.start, split))
+        reverse(arr_, range(split, range_.stop))
         reverse(arr_, range_)
 
     def _binary_main(arr_, range_: range, val, comp):
-        start_ = range_.start
-        end_ = range_.stop
-        while start_ < end_:
-            mid_ = start_ + (end_ - start_) // 2
-            if comp(arr_[mid_], val):
-                start_ = mid_ + 1
+        start = range_.start
+        end = range_.stop
+        while start < end:
+            mid = start + (end - start) // 2
+            if comp(arr_[mid], val):
+                start = mid + 1
             else:
-                end_ = mid_
+                end = mid
 
-        if start_ == range_.stop and comp(arr_[start_], val):
-            start_ = start_ + 1
-        return start_
+        if start == range_.stop - 1 and comp(arr_[start], val):
+            start += 1
+        return start
 
-    def binary_first(arr_, range_: range, val):
+    def binary_first(arr_, val, range_: range):
         return _binary_main(arr_, range_, val, lambda x, y: x < y)
 
-    def binary_last(arr_, range_: range, val):
+    def binary_last(arr_, val, range_: range):
         return _binary_main(arr_, range_, val, lambda x, y: x <= y)
+
+    def _find_forward_main(arr_, val, range_, unique, comp):
+        if len(range_) == 0:
+            return range_.start
+
+        skip = max(len(range_)//unique, 1)
+
+        for idx in itertools.count(range_.start + skip, skip):
+            if not comp(arr_[idx - 1], val):
+                break
+            if idx >= range_.stop - skip:
+                return binary_first(arr_, val, range(idx, range_.stop))
+
+        return binary_first(arr_, val, range(idx - skip, idx))
+
+    def find_first_forward(arr_, val, range_: range, unique: int):
+        return _find_forward_main(arr_, val, range_, unique, lambda x, y: x < y)
+
+    def find_last_forward(arr_, val, range_: range, unique: int):
+        return _find_forward_main(arr_, val, range_, unique, lambda x, y: x <= y)
+
+    def _find_backward_main(arr_, val, range_: range, unique: int, comp):
+        if len(range_) == 0:
+            return range_.start
+
+        skip = max(len(range_)//unique, 1)
+
+        for idx in itertools.count(range_.stop - skip, skip):
+            if not (idx > range_.start and comp(val, arr_[idx - 1])):
+                break
+
+            if idx < range_.start + skip:
+                return binary_first(arr_, val, range(range_.start, idx))
+            return binary_first(arr_, val, range(idx, idx + skip))
+
+    def find_first_backward(arr_, val, range_, unique):
+        return _find_backward_main(arr_, val, range_, unique, lambda x, y: x <= y)
+
+    def find_last_backward(arr_, val, range_, unique):
+        return _find_backward_main(arr_, val, range_, unique, lambda x, y: x < y)
 
     def length_gen(start_, stop_, multiply_factor=1):
         """Step is self value."""
@@ -400,50 +456,81 @@ def WikiSort_in_place(arr: MutableSequence, _64bit=False):
             curr *= multiply_factor
 
     def insertion(arr_: MutableSequence, start_, end_):
-        for i in range(start_, end_):
-            j = i
+        for i in range(start_ + 1, end_):
+            j, temp = i, arr_[i]
 
-            while j > start_ and arr_[j - 1] > arr_[j]:
-                swap(arr_, j, j - 1)
+            while j > start_ and arr_[j - 1] > temp:
+                arr_[j] = arr_[j - 1]
                 j -= 1
+            arr_[j] = temp
 
     def merge_in_place(arr_, range_a, range_b):
-        while len(range_a) > 0 and len(range_b) > 0:
-            mid_ = binary_first(arr_, range_b, arr_[range_a.start])
-            amount = mid_ - range_a.stop
-            rotate(arr_, range(range_a.start, mid_), amount)
+        if len(range_a) == 0 or len(range_b) == 0:
+            return
 
-            range_b = range(mid_, range_b.stop)
-            range_a = range(range_a.start + amount, mid_)
-            range_a = range(binary_last(arr_, range_a, arr_[range_a.start]), mid_)
+        range_a_ = range_a
+        range_b_ = range_b
 
-    def floor_by_power_2(x: int):
-        for n in range(6 if _64bit else 5):
-            x = x | (x >> 2**n)
-        else:
-            return x - (x >> 1)
+        while True:
+            mid_ = binary_first(arr_, arr_[range_a_.start], range_b_)
 
-    # main loop
+            amount = mid_ - range_a_.stop
+            rotate(arr_, range(range_a_.start, mid_), -amount)
+            if range_b_.stop == mid_:
+                break
 
-    power_of_two = floor_by_power_2(len(arr))
-    scale = len(arr) / power_of_two
+            range_b_ = range(mid_, range_b_.stop)
+            range_a_ = range(range_a_.start + amount, range_b_.start)
+            range_a_ = range(binary_last(arr_, arr_[range_a_.start], range_a_), range_a_.stop)
+            if len(range_a_) == 0:
+                break
 
-    for merge in range(0, power_of_two, 16):
-        start = int(merge * scale)
-        end = int(start + 16 * scale)
-        insertion(arr, start, end)
+    def net_swap(arr_, order, range_: range, x, y):
+        result = arr_[range_.start + x] > arr_[range_.start + y]
+        if result or (order[x] > order[y] and arr_[range_.start + x] == arr_[range_.start + y]):
+            swap(arr_, range_.start + x, range_.start + y)
+            swap(order, x, y)
 
-    for length in length_gen(16, power_of_two, multiply_factor=2):
-        for merge in range(0, power_of_two, 2 * length):
+    def iterator_(size, min_level):
+        def floor_by_power_2(x: int):
+            for n in range(6 if _64bit else 5):
+                x = x | (x >> 2 ** n)
+            else:
+                return x - (x >> 1)
 
-            start = int(merge * scale)
-            mid = int((merge + length) * scale)
-            end = int((merge + length * 2) * scale)
+        power_of_two = floor_by_power_2(size)
+        denominator = power_of_two // min_level
+        numerator_step = size % denominator
+        decimal_step = size // denominator
 
-            if arr[end - 1] < arr[start]:
-                rotate(arr, range(start, end), mid - start)
-            elif arr[mid - 1] > arr[mid]:
-                merge_in_place(arr, range(start, mid), range(mid, end))
+        numerator, decimal = 0, 0
+
+        while decimal_step < size:
+
+
+
+
+    def sort(arr_):
+        size = len(arr_)
+        if size < 4:
+            if size == 3:
+                if arr_[1] < arr_[0]:
+                    swap(arr_, 1, 0)
+
+                if arr_[2] < arr_[1]:
+                    swap(arr_, 2, 1)
+
+                    if arr_[1] < arr_[0]:
+                        swap(arr_, 1, 0)
+            elif size == 2:
+                if arr_[1] < arr_[0]:
+                    swap(arr_, 1, 0)
+
+        for range_ in iterator_(size, 4):
+
+
+
+
 
 
 __all__ = GetModuleReference.ListFunction(__name__)
