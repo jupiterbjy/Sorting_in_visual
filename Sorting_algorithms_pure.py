@@ -356,6 +356,35 @@ def Radix_LSD_Base4(arr):
 # TODO: separate sorts into respective .py files for easier access to reused components.
 
 
+def shell(arr: MutableSequence):
+    # ratsgo.github.io
+
+    def gap_insertion(arr_, first, gap):
+        for i in range(first + gap, len(arr_), gap):
+            cur_val = arr_[i]
+            pos = i
+
+            while pos >= gap and arr_[pos - gap] > cur_val:
+                arr_[pos] = arr_[pos - gap]
+                pos -= gap
+
+            arr_[pos] = cur_val
+
+    def shell_main(arr_):
+        sublist_count = len(arr_) // 2
+
+        while sublist_count > 0:
+            if sublist_count & 1 == 0:
+                sublist_count += 1
+
+            for start_pos in range(sublist_count):
+                gap_insertion(arr_, start_pos, sublist_count)
+
+            sublist_count //= 2
+
+    shell_main(arr)
+
+
 def WikiSort_in_place(arr: MutableSequence, _64bit=False):
     import itertools
     """Implementation based on:
@@ -376,6 +405,10 @@ def WikiSort_in_place(arr: MutableSequence, _64bit=False):
     def block_swap(arr_, start1, start2, block_size):
         for idx in range(block_size):
             swap(arr_, start1 + idx, start2 + idx)
+
+    def pull(range_):
+        pass
+
 
     def rotate(arr_, range_: range, amount):
         if len(range_) == 0:
@@ -505,10 +538,30 @@ def WikiSort_in_place(arr: MutableSequence, _64bit=False):
 
         numerator, decimal = 0, 0
 
-        while decimal_step < size:
+        def generator():
+            nonlocal numerator, decimal
+            while decimal_step < size:
+                start = decimal
+                decimal += decimal_step
+                numerator += numerator_step
+                if numerator >= denominator:
+                    numerator -= denominator
+                    decimal += 1
 
+                yield range(start, decimal)
 
+        def next_level():
+            nonlocal decimal_step, numerator_step
+            decimal_step *= 2
+            numerator_step *= 2
+            if numerator_step >= denominator:
+                numerator_step -= denominator
+                decimal_step += 1
 
+            return decimal_step < size
+
+        generator.next_level = next_level
+        return generator()
 
     def sort(arr_):
         size = len(arr_)
@@ -526,11 +579,82 @@ def WikiSort_in_place(arr: MutableSequence, _64bit=False):
                 if arr_[1] < arr_[0]:
                     swap(arr_, 1, 0)
 
-        for range_ in iterator_(size, 4):
+        iterator = iterator_(size, 4)
+        for range_ in iterator:
+            order = array.array(range(8))
 
+            if len(range_) == 8:
+                for i in range(0, 8, 2):
+                    net_swap(arr_, order, range_, i, i + 1)
 
+                net_swap(arr_, order, range_, 0, 2)
+                net_swap(arr_, order, range_, 1, 3)
+                net_swap(arr_, order, range_, 4, 6)
+                net_swap(arr_, order, range_, 5, 7)
+                net_swap(arr_, order, range_, 1, 2)
+                net_swap(arr_, order, range_, 5, 6)
+                net_swap(arr_, order, range_, 0, 4)
+                net_swap(arr_, order, range_, 3, 7)
+                net_swap(arr_, order, range_, 1, 5)
+                net_swap(arr_, order, range_, 2, 6)
+                net_swap(arr_, order, range_, 1, 4)
+                net_swap(arr_, order, range_, 3, 6)
+                net_swap(arr_, order, range_, 2, 4)
+                net_swap(arr_, order, range_, 3, 5)
+                net_swap(arr_, order, range_, 3, 4)
 
+            elif len(range_) == 7:
+                net_swap(arr_, order, range_, 1, 2)
+                net_swap(arr_, order, range_, 3, 4)
+                net_swap(arr_, order, range_, 5, 6)
+                net_swap(arr_, order, range_, 0, 2)
+                net_swap(arr_, order, range_, 3, 5)
+                net_swap(arr_, order, range_, 4, 6)
+                net_swap(arr_, order, range_, 0, 1)
+                net_swap(arr_, order, range_, 4, 5)
+                net_swap(arr_, order, range_, 2, 6)
+                net_swap(arr_, order, range_, 0, 4)
+                net_swap(arr_, order, range_, 1, 5)
+                net_swap(arr_, order, range_, 0, 3)
+                net_swap(arr_, order, range_, 2, 5)
+                net_swap(arr_, order, range_, 1, 3)
+                net_swap(arr_, order, range_, 2, 4)
+                net_swap(arr_, order, range_, 2, 3)
 
+            elif len(range_) == 6:
+                net_swap(arr_, order, range_, 1, 2)
+                net_swap(arr_, order, range_, 4, 5)
+                net_swap(arr_, order, range_, 0, 2)
+                net_swap(arr_, order, range_, 3, 5)
+                net_swap(arr_, order, range_, 0, 1)
+                net_swap(arr_, order, range_, 3, 4)
+                net_swap(arr_, order, range_, 2, 5)
+                net_swap(arr_, order, range_, 0, 3)
+                net_swap(arr_, order, range_, 1, 4)
+                net_swap(arr_, order, range_, 2, 4)
+                net_swap(arr_, order, range_, 1, 3)
+                net_swap(arr_, order, range_, 2, 3)
+
+            elif len(range_) == 5:
+                net_swap(arr_, order, range_, 0, 1)
+                net_swap(arr_, order, range_, 3, 4)
+                net_swap(arr_, order, range_, 2, 4)
+                net_swap(arr_, order, range_, 2, 3)
+                net_swap(arr_, order, range_, 1, 4)
+                net_swap(arr_, order, range_, 0, 3)
+                net_swap(arr_, order, range_, 0, 2)
+                net_swap(arr_, order, range_, 1, 3)
+                net_swap(arr_, order, range_, 1, 2)
+
+            elif len(range_) == 4:
+                net_swap(arr_, order, range_, 0, 1)
+                net_swap(arr_, order, range_, 2, 3)
+                net_swap(arr_, order, range_, 0, 2)
+                net_swap(arr_, order, range_, 1, 3)
+                net_swap(arr_, order, range_, 1, 2)
+                
+            if size < 8:
+                return
 
 
 __all__ = GetModuleReference.ListFunction(__name__)
@@ -540,5 +664,6 @@ if __name__ == '__main__':
     from async_main import shuffle
     shuffle(testcase)
     print(testcase)
-    WikiSort_in_place(testcase)
+    # WikiSort_in_place(testcase)
+    shell(testcase)
     print(testcase)
