@@ -138,7 +138,6 @@ def Insertion(arr: MutableSequence):
 
 
 def Heap(arr: MutableSequence):
-
     def heapify(unsorted, idx, heap_size):
         largest = idx
         left_idx = 2 * idx + 1
@@ -166,7 +165,6 @@ def Heap(arr: MutableSequence):
 
 
 def Merge(arr: MutableSequence):
-
     def join_parts(array_, left, right, mid):
         sorted_ = array.array('i')
         l_, r, m = left, right, mid + 1
@@ -203,13 +201,50 @@ def Merge(arr: MutableSequence):
     # return arr
 
 
+def Merge_bottom_up_inplace(arr):
+    # https://www.geeksforgeeks.org/iterative-merge-sort/
+    # https://www.geeksforgeeks.org/in-place-merge-sort/
+
+    def merge(arr_, left, mid, right):
+        start2 = mid + 1
+
+        if arr_[mid] <= arr_[start2]:
+            return
+
+        while left <= mid and start2 <= right:
+            if arr_[left] <= arr_[start2]:
+                left += 1
+            else:
+                val = arr_[start2]
+                idx = start2
+
+                while idx != left:
+                    arr_[idx] = arr_[idx - 1]
+                    idx -= 1
+
+
+    def sort(arr_):
+        length = len(arr_)
+        size = 1
+        while size < length - 1:
+            left = 0
+
+            while left < length - 1:
+                mid = min(left + size - 1, length - 1)
+                right = length - 1 if (n := 2 * size + left - 1) > length - 1 else n
+
+                merge(arr_, left, mid, right)
+                left += size * 2
+
+            size *= 2
+
+
 def Quick(arr: MutableSequence):
     n = len(arr)
 
     def Sub_Quick(left, right):
 
         if left < right:
-
             pivot_new = Partition(left, right)
 
             Sub_Quick(left, pivot_new)
@@ -269,7 +304,6 @@ def Counting(arr: MutableSequence):
 
 
 def Radix_LSD_Base2(arr: MutableSequence):
-
     def count_bits(n):
         if n == 0:
             return 0
@@ -305,7 +339,6 @@ def Radix_LSD_Base2(arr: MutableSequence):
 
 
 def _Radix_LSD_BaseN(arr: MutableSequence, base):
-
     def count_digits(n):
         if n == 0:
             return 0
@@ -327,7 +360,6 @@ def _Radix_LSD_BaseN(arr: MutableSequence, base):
             counts[i_ + 1] += counts[i_]
 
         for i_ in reversed(array_):
-
             results[counts[Base_out(i_)] - 1] = i_
             counts[Base_out(i_)] -= 1
 
@@ -351,6 +383,7 @@ def Radix_LSD_Base10(arr):
 
 def Radix_LSD_Base4(arr):
     return _Radix_LSD_BaseN(arr, 4)
+
 
 # TODO: Make bit_shift version of LSDs' whose base is multiply of 2.
 # TODO: separate sorts into respective .py files for easier access to reused components.
@@ -385,7 +418,83 @@ def shell(arr: MutableSequence):
     shell_main(arr)
 
 
-def WikiSort_in_place(arr: MutableSequence, _64bit=False):
+def cycle(arr: MutableSequence):
+    # wikipedia implementation
+
+    for cycle_start in range(0, len(arr) - 1):
+        item = arr[cycle_start]
+
+        pos = cycle_start
+        for i in range(cycle_start + 1, len(arr)):
+            if arr[i] < item:
+                pos += 1
+
+        if pos == cycle_start:
+            continue
+
+        while item == arr[pos]:
+            pos += 1
+
+        arr[pos], item = item, arr[pos]
+
+        while pos != cycle_start:
+            pos = cycle_start
+            for i in range(cycle_start + 1, len(arr)):
+                if arr[i] < item:
+                    pos += 1
+
+            while item == arr[pos]:
+                pos += 1
+            arr[pos], item = item, arr[pos]
+
+
+def bucket(arr):
+    from itertools import chain
+
+    k = len(arr)
+
+    def insertion(arr_: MutableSequence):
+        for idx_ in range(len(arr_)):
+            temp = arr_[idx_]
+
+            while arr_[idx_ - 1] > temp:
+                arr_[idx_] = arr_[idx_ - 1]
+                idx_ -= 1
+            arr_[idx_] = temp
+
+    buckets = tuple([] for _ in range(k))
+    m = max(arr)
+
+    for val in arr:
+        buckets[(k * val) // (m + 1)].append(val)
+
+    for i in range(1, k):
+        insertion(buckets[i])
+
+    for idx, val in enumerate(chain(*buckets)):
+        arr[idx] = val
+
+
+def grail_INCOMPLETE(arr):
+    def swap(arr_, idx1, idx2):
+        arr_[idx1], arr_[idx2] = arr_[idx2], arr_[idx1]
+
+    def block_swap(arr_, start1, start2, block_size):
+        for idx in range(block_size):
+            swap(arr_, start1 + idx, start2 + idx)
+
+    def rotate(arr_, start, length, amount):
+        while length and amount:
+            if length <= amount:
+                block_swap(arr_, start, start + length, amount)
+                start += length
+                amount -= length
+            else:
+                block_swap(arr_, start + length - amount, start + length, amount)
+                length -= amount
+
+
+def WikiSort_INCOMPLETE(arr: MutableSequence, _64bit=False):
     import itertools
     """Implementation based on:
     https://github.com/BonzaiThePenguin/WikiSort/blob/master/Chapter%201.%20Tools.md"""
@@ -409,12 +518,10 @@ def WikiSort_in_place(arr: MutableSequence, _64bit=False):
     def pull(range_):
         pass
 
-
     def rotate(arr_, range_: range, amount):
         if len(range_) == 0:
             return
 
-        # no plan to use cache for now
         split = range_.start + amount if amount >= 0 else range_.stop + amount
 
         reverse(arr_, range(range_.start, split))
@@ -445,7 +552,7 @@ def WikiSort_in_place(arr: MutableSequence, _64bit=False):
         if len(range_) == 0:
             return range_.start
 
-        skip = max(len(range_)//unique, 1)
+        skip = max(len(range_) // unique, 1)
 
         for idx in itertools.count(range_.start + skip, skip):
             if not comp(arr_[idx - 1], val):
@@ -465,7 +572,7 @@ def WikiSort_in_place(arr: MutableSequence, _64bit=False):
         if len(range_) == 0:
             return range_.start
 
-        skip = max(len(range_)//unique, 1)
+        skip = max(len(range_) // unique, 1)
 
         for idx in itertools.count(range_.stop - skip, skip):
             if not (idx > range_.start and comp(val, arr_[idx - 1])):
@@ -652,7 +759,7 @@ def WikiSort_in_place(arr: MutableSequence, _64bit=False):
                 net_swap(arr_, order, range_, 0, 2)
                 net_swap(arr_, order, range_, 1, 3)
                 net_swap(arr_, order, range_, 1, 2)
-                
+
             if size < 8:
                 return
 
@@ -662,8 +769,9 @@ __all__ = GetModuleReference.ListFunction(__name__)
 if __name__ == '__main__':
     testcase = [i for i in range(100)]
     from async_main import shuffle
+
     shuffle(testcase)
     print(testcase)
     # WikiSort_in_place(testcase)
-    shell(testcase)
+    bucket(testcase)
     print(testcase)
