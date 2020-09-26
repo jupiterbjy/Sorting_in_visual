@@ -70,6 +70,9 @@ if __name__ == "__main__":
     test_func = [lambda x: x for _ in range(n)]
     test_val = [i + 1 for i in range(n)]
 
-    horizontal_bar(100, 200, test_func, test_val, len(str(n)), "test")
-    horizontal_num(100, 200, test_func, test_val, len(str(n)), "test")
-    horizontal_dot(100, 200, test_func, test_val, len(str(n)), "test")
+    test_suite = 100, 200, test_func, test_val, len(str(n)), "test"
+
+    inline(*test_suite)
+    horizontal_bar(*test_suite)
+    horizontal_num(*test_suite)
+    horizontal_dot(*test_suite)

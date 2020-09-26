@@ -46,9 +46,69 @@ Example setup that was used for video I've created and split to above images:
 20 20 20 20 20 40 40 40 30 40 40
 0 1 0 0 0 0 0 0 2 0 0
 ```
-Copy-Paste this and it should show same results, same order.
+Copy-Paste this and it should show same results, same order. Might not if new sorts are added.
 
 ---
+
+### Implementation:
+
+Scripts are designed to perform dynamic import for *Visualization* and *Sorting Functions*.
+
+No visualization nor sorting is hardcoded, and will not require any modification or intervention.
+
+#### Sorting Visualizing:
+From [MutableWrapper](MutableWrapper.py) you will get clear idea of how this works.
+
+By implementing *MutableSequence* abc to wrap a ```array.array``` one can get precise count and progressive actions/results as sorting functions progresses.
+
+This also means not a single modification on Sorting functions, as long as it is designed to prefer main array, rather than aux.
+
+For a future implementation of separated multiple sorting instances in parallel, all results are collected on ```asyncio.queue```.
+
+#### Visualization:
+With use of closure one can create neat personal [visualize method](VisualMethod/OutputMethods.py) - only for horizontal so far - by one-liner.
+
+I believe it's abstract enough.
+
+```python
+horizontal_bar = create_horizontal((" ", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"), over="█")
+horizontal_num = create_horizontal((" ", *(str(i) for i in range(1, 10)), bold("X")))
+horizontal_dot = create_horizontal((" ", *map(bold, ".·˙")))  # this runs too slow
+```
+
+All stock visualize methods:
+```
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 |100 200
+
+                        ▁▂▃▄▅▆
+                ▁▂▃▄▅▆▇███████
+        ▁▂▃▄▅▆▇███████████████
+▁▂▃▄▅▆▇███████████████████████
+test | Get: 100 | Set: 200
+
+                    123456789X
+          123456789X          
+123456789X                    
+test | Get: 100 | Set: 200
+
+                           .·˙
+                        .·˙   
+                     .·˙      
+                  .·˙         
+               .·˙            
+            .·˙               
+         .·˙                  
+      .·˙                     
+   .·˙                        
+.·˙                           
+test | Get: 100 | Set: 200
+
+```
+Inline methods are meant for debugging.
+
+---
+
+### ETC
 
 And I'm failing to implement neither in-place merge sorts. lel.
 ![Messed-up](demo/messed_up.PNG)
