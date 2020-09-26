@@ -129,12 +129,13 @@ def Selection(arr: MutableSequence):
 def Insertion(arr: MutableSequence):
     for i in range(1, len(arr)):
         j = i
+        item = arr[i]
 
-        while j > 0 and arr[j - 1] > arr[j]:
-            arr[j], arr[j - 1] = arr[j - 1], arr[j]
+        while j > 0 and arr[j - 1] > item:
+            arr[j] = arr[j - 1]
             j -= 1
 
-    # return arr
+        arr[j] = item
 
 
 def Heap(arr: MutableSequence):
@@ -164,6 +165,7 @@ def Heap(arr: MutableSequence):
     # return arr
 
 
+# TODO: check stability on this: failed stability test. on Baekjoon.
 def Merge(arr: MutableSequence):
     def join_parts(array_, left, right, mid):
         sorted_ = array.array('i')
@@ -200,43 +202,78 @@ def Merge(arr: MutableSequence):
 
     # return arr
 
+def Merge_inplace_rotation(arr):
+    import operator
 
-def Merge_bottom_up_inplace(arr):
     # https://www.geeksforgeeks.org/iterative-merge-sort/
-    # https://www.geeksforgeeks.org/in-place-merge-sort/
+    # https://xinok.wordpress.com/2014/08/17/in-place-merge-sort-demystified-2/
 
-    def merge(arr_, left, mid, right):
-        start2 = mid + 1
+    def swap(arr_, a, b):
+        arr_[a], arr_[b] = arr_[b], arr_[a]
 
-        if arr_[mid] <= arr_[start2]:
+    def reverse(arr_, range_: range):
+        for idx in range(len(range_) // 2 - 1, -1, -1):
+            swap(arr_, range_.start + idx, range_.stop - idx - 1)
+
+    def rotate(arr_, range_: range, amount):
+        if len(range_) == 0:
             return
 
-        while left <= mid and start2 <= right:
-            if arr_[left] <= arr_[start2]:
-                left += 1
+        split = range_.start + amount if amount >= 0 else range_.stop + amount
+
+        reverse(arr_, range(range_.start, split))
+        reverse(arr_, range(split, range_.stop))
+        reverse(arr_, range_)
+
+    def _binary_main(arr_, range_: range, val, comp):
+        start = range_.start
+        end = range_.stop
+        while start < end:
+            mid = start + (end - start) // 2
+            if comp(arr_[mid], val):
+                start = mid + 1
             else:
-                val = arr_[start2]
-                idx = start2
+                end = mid
 
-                while idx != left:
-                    arr_[idx] = arr_[idx - 1]
-                    idx -= 1
+        if start == range_.stop - 1 and comp(arr_[start], val):
+            start += 1
+        return start
 
+    def binary_first(arr_, val, range_: range):
+        return _binary_main(arr_, range_, val, operator.lt)
 
-    def sort(arr_):
-        length = len(arr_)
-        size = 1
-        while size < length - 1:
-            left = 0
+    def binary_last(arr_, val, range_: range):
+        return _binary_main(arr_, range_, val, operator.le)
 
-            while left < length - 1:
-                mid = min(left + size - 1, length - 1)
-                right = length - 1 if (n := 2 * size + left - 1) > length - 1 else n
+    def merge(arr_, range_a, range_b):
+        if len(range_a) == 0 or len(range_b) == 0:
+            return
 
-                merge(arr_, left, mid, right)
-                left += size * 2
+        range_a = range(range_a.start, range_a.stop)
+        range_b = range(range_b.start, range_b.stop)
 
-            size *= 2
+        while True:
+            mid = binary_first(arr_, arr_[range_a.start], range_b)
+            amount = mid - range_a.stop
+            rotate(arr_, range(range_a.start, mid), -amount)
+            if range_b.stop == mid:
+                break
+
+            range_b = range(mid, range_b.stop)
+            range_a = range(range_a.start + amount, mid)
+            range_a = range(binary_last(arr_, arr_[range_a.start], range_a), range_a.stop)
+            if len(range_a) == 0:
+                break
+
+    def sub_merge(array_, left, right):
+
+        if left < right:
+            mid = (left + right) // 2
+            sub_merge(array_, left, mid)
+            sub_merge(array_, mid + 1, right)
+            merge(array_, range(left, mid), range(mid, right))
+
+    sub_merge(arr, 0, len(arr) - 1)
 
 
 def Quick(arr: MutableSequence):
@@ -767,11 +804,9 @@ def WikiSort_INCOMPLETE(arr: MutableSequence, _64bit=False):
 __all__ = GetModuleReference.ListFunction(__name__)
 
 if __name__ == '__main__':
-    testcase = [i for i in range(100)]
-    from async_main import shuffle
+    from async_main import generate_test
 
-    shuffle(testcase)
-    print(testcase)
+    testcase = generate_test(20)
     # WikiSort_in_place(testcase)
-    bucket(testcase)
+    Merge_inplace_rotation(testcase)
     print(testcase)

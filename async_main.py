@@ -134,7 +134,7 @@ async def sort_main(sort_list, visualizer, testcases):
         await sort_task
         await visual
         print(f"\n{idx + 1}/{len(sort_list)} Completed.")
-        await asyncio.sleep(2)
+        await asyncio.sleep(1.5)
 
 
 def main_loop():
@@ -154,7 +154,7 @@ if __name__ == '__main__':
     main_loop()
 
 '''
-1 3 13 6 8 5 7 9 4 10 11
-20 20 20 20 20 40 40 40 30 40 40
-0 1 0 0 0 0 0 0 2 0 0
+1 9 3 19 17 6 12 7 5 6 4 10
+20 20 20 30 20 20 40 40 40 40 30 40
+0 1 1 0 0 0 0 0 0 0 2 0
 '''

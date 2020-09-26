@@ -70,20 +70,39 @@ class PrintingCountingMutable(CountingMutable):
     """
     Best tool to play with when learning MutableSequence!
     """
-    def __init__(self):
-        super().__init__()
+    def __init__(self, source, show_all=False):
+        super().__init__(source)
+        self.flag = show_all
 
     def on_insert(self, idx, item):
-        print(f"insert item {item} at {idx}")
+        if self.flag:
+            self.on_change()
+        else:
+            print(f"insert item {item} at {idx}")
 
     def on_get(self, idx):
-        print(f"get item {self.arr[idx]} at {idx}")
+        if self.flag:
+            self.on_change()
+        else:
+            print(f"get item {self.arr[idx]} at {idx}")
 
     def on_set(self, idx):
-        print(f"set item {self.arr[idx]} at {idx}")
+        if self.flag:
+            self.on_change()
+        else:
+            print(f"set item {self.arr[idx]} at {idx}")
 
     def on_del(self, idx):
-        print(f"del item {self.arr[idx]} at {idx}")
+        if self.flag:
+            self.on_change()
+        else:
+            print(f"del item {self.arr[idx]} at {idx}")
+
+    def on_change(self):
+        print(self.arr)
+
+    def __eq__(self, other):
+        return True if self.arr == other.arr else False
 
 
 class ArrayWrap(CountingMutable):
