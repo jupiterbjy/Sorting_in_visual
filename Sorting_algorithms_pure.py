@@ -216,7 +216,7 @@ def Merge_inplace_rotation(arr):
             swap(arr_, range_.start + idx, range_.stop - idx - 1)
 
     def rotate(arr_, range_: range, amount):
-        if len(range_) == 0:
+        if len(range_) == 0 or amount == 0:
             return
 
         split = range_.start + amount if amount >= 0 else range_.stop + amount

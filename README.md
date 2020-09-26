@@ -47,3 +47,9 @@ Example setup that was used for video I've created and split to above images:
 0 1 0 0 0 0 0 0 2 0 0
 ```
 Copy-Paste this and it should show same results, same order.
+
+---
+
+And I'm failing to implement neither in-place merge sorts. lel.
+![Messed-up](demo/messed_up.PNG)
+Used Merge code from wikisort, yet it's not working for weeks. 
