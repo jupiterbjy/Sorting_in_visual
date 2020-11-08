@@ -1,9 +1,10 @@
 from sys import modules
 from inspect import getmembers, isclass, isfunction
 from types import ModuleType
+from typing import List, Tuple, Any
 
 
-def ListTarget(module_name: (str, ModuleType), target, blacklist: set, return_dict):
+def ListTarget(module_name: (str, ModuleType), target, blacklist: set, return_dict, local_only):
 
     if blacklist is None:
         blacklist = set()
@@ -18,17 +19,23 @@ def ListTarget(module_name: (str, ModuleType), target, blacklist: set, return_di
 
     members = getmembers(target_module, target)
 
-    filtered = [(name, ref) for name, ref in members
-                if name not in blacklist
-                and not name.startswith('_')
-                and module_name is modules[ref.__module__]]
+    def filter_gen(source: List[Tuple[str, Any]]):
+        if local_only:
+            source = [(name, ref) for name, ref in source if modules[ref.__module__] is target_module]
 
-    return {name: ref for name, ref in filtered} if return_dict else tuple(name for name, _ in filtered)
+        for name, ref in source:
+            if name not in blacklist and not name.startswith("_"):
+                yield name, ref
+
+    if return_dict:
+        return {name: ref for name, ref in filter_gen(members)}
+    else:
+        return tuple(name for name, _ in filter_gen(members))
 
 
-def ListClass(name, blacklist: set = None, return_dict=False):
-    return ListTarget(name, isclass, blacklist, return_dict)
+def ListClass(name, blacklist: set = None, return_dict=False, local_only=True):
+    return ListTarget(name, isclass, blacklist, return_dict, local_only)
 
 
-def ListFunction(name, blacklist: set = None, return_dict=False):
-    return ListTarget(name, isfunction, blacklist, return_dict)
+def ListFunction(name, blacklist: set = None, return_dict=False, local_only=True):
+    return ListTarget(name, isfunction, blacklist, return_dict, local_only)
