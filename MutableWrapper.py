@@ -49,6 +49,7 @@ class CountingMutable(MutableSequence):
     def __len__(self) -> int:
         return len(self.arr)
 
+
     # Override below after inherit.
     # below functions will run before actual array manipulation -
     # You're guaranteed to have specific key / item until end of scope.

@@ -1,7 +1,7 @@
 import asyncio
 import random
 import re
-import Sorting_algorithms_pure
+import PureSorts
 import GetModuleReference
 from itertools import cycle
 from MutableWrapper import ArrayWrap
@@ -72,13 +72,13 @@ def select_sorts_list() -> list:
     ANSIWrap.clear()
 
     # show list of sorts implemented
-    sort_list = GetModuleReference.ListFunction(Sorting_algorithms_pure)
+    sort_list = PureSorts.__all__
     show_list(sort_list)
 
     # get list of sorts to play
     raw_list = input("Enter multiple index of sorts to play: ")
     try:
-        selected_list = [getattr(Sorting_algorithms_pure, sort_list[i])
+        selected_list = [getattr(PureSorts, sort_list[i])
                          for i in map(int, re.split(r"(?:!+|-+| +|/+|\.+)", raw_list))]
 
     except IndexError:
