@@ -1,11 +1,15 @@
+from __future__ import annotations
+
 import array
 import asyncio
+import queue
+import time
 from collections.abc import MutableSequence, Iterable
 from VisualMethod.ANSIWrap import *
 
 
 class CountingMutable(MutableSequence):
-    def __init__(self, source: (MutableSequence, Iterable) = None):
+    def __init__(self, source: MutableSequence | Iterable = None):
         try:
             self.arr = array.array('i', source)
         except TypeError:
@@ -14,7 +18,7 @@ class CountingMutable(MutableSequence):
         self.access = 0
         self.write = 0
 
-    def __repr__(self):
+    def __str__(self):
         return f"{str(self.arr)}, access = {self.access}, write = {self.write}"
 
     def insert(self, index: int, o) -> None:
@@ -49,7 +53,6 @@ class CountingMutable(MutableSequence):
     def __len__(self) -> int:
         return len(self.arr)
 
-
     # Override below after inherit.
     # below functions will run before actual array manipulation -
     # You're guaranteed to have specific key / item until end of scope.
@@ -67,6 +70,7 @@ class CountingMutable(MutableSequence):
         pass
 
 
+# TODO: replace pointless asyncio usage
 class PrintingCountingMutable(CountingMutable):
     """
     Best tool to play with when learning MutableSequence!
@@ -116,11 +120,13 @@ class ArrayWrap(CountingMutable):
         'sorted': br_blue
     }
 
-    def __init__(self, source: (MutableSequence, Iterable), q: asyncio.Queue):
+    def __init__(self, source: MutableSequence | Iterable, q: queue.Queue = None):
 
         super().__init__(source)
         self.color_mapping = [self.color_map['default'] for _ in range(len(self.arr))]
         self.queue = q
+
+        self.print_directly = bool(q)
 
     def on_insert(self, idx, item):
         self.on_call(idx, 'insert')
@@ -142,6 +148,8 @@ class ArrayWrap(CountingMutable):
         except AttributeError:
             pass
 
+        # self.delay_func()
+
     def apply_color_condition(self):
         for idx, n in enumerate(self.arr):
             if idx + 1 == n:
@@ -151,3 +159,10 @@ class ArrayWrap(CountingMutable):
 
     def mark_all_sorted(self):
         return self.access, self.write, [self.color_map['sorted'] for _ in range(len(self.arr))], self.arr
+
+
+class PromptingListWrapper(CountingMutable):
+    def __init__(self, source: MutableSequence | Iterable):
+        super().__init__(source)
+
+
