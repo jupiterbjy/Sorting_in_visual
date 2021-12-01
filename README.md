@@ -2,11 +2,13 @@
 
 Trying to replicate some sorting actions visually, motived by 'Sounds of Sorting'.
 
-<video width="320" height="240" controls>
-  <source src="demo/demo.mp4" type="video/mp4">
-</video>
+[comment]: <> (<video width="320" height="240" controls>)
 
-[Demo video](demo/demo.mp4) - sped up twice.
+[comment]: <> (  <source src="Visualizer/demo/demo.mp4" type="video/mp4">)
+
+[comment]: <> (</video>)
+
+[Demo video](Visualizer/demo/demo.mp4) - sped up twice.
 
 ---
 
@@ -20,15 +22,15 @@ Meh!
 #### New
 Sorts implemented so far:
 
-![Bubble_opt x2](demo/Bubble.webp)
-![Cocktail-Shaker_op1 x2](demo/Shaker.webp)
-![Selection x2](demo/Selection.webp)
-![Insertion x2](demo/Insertion.webp)
-![Odd-Even x2](demo/OddEven.webp)
-![Heap x3](demo/Heap.webp)
-![Merge x2](demo/Merge.webp)
-![Quick x2](demo/Quick.webp)
-![Counting And Radix_10 x2](demo/Count_Radix.webp)
+![Bubble_opt x2](Visualizer/demo/Bubble.webp)
+![Cocktail-Shaker_op1 x2](Visualizer/demo/Shaker.webp)
+![Selection x2](Visualizer/demo/Selection.webp)
+![Insertion x2](Visualizer/demo/Insertion.webp)
+![Odd-Even x2](Visualizer/demo/OddEven.webp)
+![Heap x3](Visualizer/demo/Heap.webp)
+![Merge x2](Visualizer/demo/Merge.webp)
+![Quick x2](Visualizer/demo/Quick.webp)
+![Counting And Radix_10 x2](Visualizer/demo/Count_Radix.webp)
 
 All those videos are accelerated, factor shown on image description.
 
@@ -117,5 +119,5 @@ Inline methods are meant for debugging.
 ### ETC
 
 And I'm failing to implement neither in-place merge sorts. lel.
-![Messed-up](demo/messed_up.PNG)
+![Messed-up](Visualizer/demo/messed_up.PNG)
 Used Merge code from wikisort, yet it's not working for weeks. 
