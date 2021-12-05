@@ -4,6 +4,40 @@ from collections.abc import MutableSequence
 
 
 def Quick(arr: MutableSequence):
+
+    def inner(arr_, left, right):
+
+        if left < right:
+            i = left
+            j = right + 1
+            pivot = arr_[left]
+
+            while True:
+                while True:
+                    i += 1
+                    if not arr_[i] < pivot:
+                        break
+
+                while True:
+                    j -= 1
+                    if not arr_[j] > pivot:
+                        break
+
+                if i < j:
+                    arr_[i], arr_[j] = arr_[j], arr_[i]
+
+                if not i < j:
+                    break
+
+            arr_[left], arr_[j] = arr_[j], arr_[left]
+
+            inner(arr_, left, j - 1)
+            inner(arr_, j + 1, right)
+
+    inner(arr, 0, len(arr) - 1)
+
+
+def _Quick(arr: MutableSequence):
     n = len(arr)
 
     def Sub_Quick(left, right):
